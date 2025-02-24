@@ -1,0 +1,10 @@
+{
+    "1": {
+        "movementSpeed": 0.6,
+        "texture": "ship.png"
+    },
+    "2": {
+        "movementSpeed": 0.9,
+        "texture": "ship2.png"
+    }
+}
