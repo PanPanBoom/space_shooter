@@ -23,6 +23,30 @@ export class MainGameScene extends Scene
 
     preload ()
     {
+        const width = this.cameras.main.width;
+        const height = this.cameras.main.height;
+        const x: number = 0;
+        const y: number = this.cameras.main.centerY;
+        
+        const progressBar = this.add.graphics();
+        const progressBox = this.add.graphics();
+        
+        progressBox.fillStyle(0x222222, 0.8);
+        progressBox.fillRect(x, y, width, 64);
+
+        this.load.on('progress', (value: number) => {
+            console.log(value);
+            progressBar.clear();
+            progressBar.fillStyle(0xffffff, 1);
+            progressBar.fillRect(x, y, width * value, 64);
+        });
+
+        this.load.on('complete', () => {
+            console.log('complete');
+            progressBar.destroy();
+            progressBox.destroy();
+        });
+
         this.load.setPath('assets');
         
         this.load.image('bg', 'Backgrounds/blue.png');
