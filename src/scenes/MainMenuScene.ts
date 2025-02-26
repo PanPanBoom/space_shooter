@@ -1,5 +1,6 @@
 import { Game, GameObjects, Scene } from "phaser";
 import { SceneNames } from "./SceneNames";
+import { GameDataKeys } from "../GameDataKey";
 
 export class MainMenuScene extends Scene
 {
@@ -64,7 +65,9 @@ export class MainMenuScene extends Scene
             this.scene.start(SceneNames.MAIN_GAME_SCENE, {
                 round: 1
             });
-        })
+        });
+
+        this.registry.set<number>(GameDataKeys.PLAYER_SCORE, 0);
     }
 
     update(time: number, delta: number)

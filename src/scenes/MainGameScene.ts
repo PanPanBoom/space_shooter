@@ -54,7 +54,7 @@ export class MainGameScene extends Scene
 
         this.load.setPath('assets');
         
-        this.load.image('bg', 'Backgrounds/blue.png');
+        // this.load.image('bg', 'Backgrounds/blue.png');
         this.load.image('planet', 'Planets/planet06.png');
         this.load.atlas('sprites', 'Spritesheet/texture.png', 'Spritesheet/texture.json');
         this.load.audio("sfx_laser1", "Sounds/sfx_laser1.ogg");
@@ -114,11 +114,9 @@ export class MainGameScene extends Scene
             loop: true
         });
         this.add.text(this.cameras.main.centerX, 16, "SCORE", { fontSize: '40px', align: 'center'}).setOrigin(0.5);
-        this.scoreText = this.add.text(this.cameras.main.centerX, 48, "0", { fontSize: '40px', align: 'center'}).setOrigin(0.5);
+        this.scoreText = this.add.text(this.cameras.main.centerX, 48, this.registry.get(GameDataKeys.PLAYER_SCORE), { fontSize: '40px', align: 'center'}).setOrigin(0.5);
 
-        this.registry.set<number>(GameDataKeys.PLAYER_SCORE, 0);
         this.registry.events.on("changedata-" + GameDataKeys.PLAYER_SCORE, (_: any, value: number) => {
-            console.log(value);
             this.scoreText.setText(value.toString());
         });
 
