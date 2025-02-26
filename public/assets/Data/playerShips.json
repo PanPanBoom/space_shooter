@@ -1,10 +1,20 @@
 {
     "1": {
         "movementSpeed": 0.6,
-        "texture": "ship.png"
+        "texture": "ship.png",
+        "body": {
+            "radius": 49,
+            "offsetX": -12,
+            "offsetY": 5
+        }
     },
     "2": {
         "movementSpeed": 0.9,
-        "texture": "ship2.png"
+        "texture": "ship2.png",
+        "body": {
+            "radius": 49,
+            "offsetX": -12,
+            "offsetY": 5
+        }
     }
 }

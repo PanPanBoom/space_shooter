@@ -1,5 +1,7 @@
 import { MainGameScene } from './scenes/MainGameScene';
 import { AUTO, Game, Scale,Types } from 'phaser';
+import { MainMenuScene } from './scenes/MainMenuScene';
+import { GameOverScene } from './scenes/GameOverScene';
 
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
@@ -21,7 +23,9 @@ const config: Types.Core.GameConfig = {
     },
     fps: { forceSetTimeOut: true, target: 60 },
     scene: [
-        MainGameScene
+        MainMenuScene,
+        MainGameScene,
+        GameOverScene
     ]
 };
 
