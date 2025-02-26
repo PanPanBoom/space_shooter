@@ -61,7 +61,9 @@ export class MainMenuScene extends Scene
         this.add.text(this.cameras.main.centerX, this.cameras.main.height - 256, 'Press SPACE to start', {fontSize: fontSize + 'px', color: 'white', fontFamily: 'future'}).setOrigin(0.5);
 
         this.input.keyboard?.once('keydown-SPACE', () => {
-            this.scene.start(SceneNames.MAIN_GAME_SCENE);
+            this.scene.start(SceneNames.MAIN_GAME_SCENE, {
+                round: 1
+            });
         })
     }
 

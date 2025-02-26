@@ -1,0 +1,3 @@
+type RoundInitData = {
+    round: number;
+}
