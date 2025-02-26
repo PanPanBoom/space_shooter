@@ -37,16 +37,21 @@ export class Player extends Entity
 
         this.setAngle(-90);
 
+        const playerShipsData = this.scene.cache.json.get("playerShips") as PlayerShipsData;
+        this.play('shipIdle');
+    }
+
+    private createAnimation(shipId: number)
+    {
         this.anims.create({
             key: 'shipIdle',
             frames: [
-                { key: 'sprites', frame: 'ship' + defaultShip + '_frame1.png' },
-                { key: 'sprites', frame: 'ship' + defaultShip + '_frame2.png' }
+                { key: 'sprites', frame: 'ship' + shipId + '_frame1.png' },
+                { key: 'sprites', frame: 'ship' + shipId + '_frame2.png' }
             ],
             frameRate: 30,
             repeat: -1
         });
-        this.play('shipIdle')
     }
 
     private selectShip(shipId: number)
@@ -57,6 +62,13 @@ export class Player extends Entity
         this.setTexture('sprites', this.playerShipData.texture);
         this.getComponent(MovementComponent)?.setSpeed(this.playerShipData.movementSpeed);
         this.arcadeBody.setCircle(this.playerShipData.body.radius, this.playerShipData.body.offsetX, this.playerShipData.body.offsetY);
+    
+        const animName: string = "shipIdle";
+        if(this.anims.exists(animName))
+            this.anims.remove(animName);
+
+        this.createAnimation(shipId);
+        this.play(animName);
     }
 
     public preUpdate(time: number, delta: number)
