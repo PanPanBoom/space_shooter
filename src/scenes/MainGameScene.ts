@@ -92,7 +92,7 @@ export class MainGameScene extends Scene
         });
         GroupUtils.preallocateGroup(this.enemies, 5);
 
-        this.player = new Player(this, this.cameras.main.centerX, this.cameras.main.height - 128, 'sprites', 'ship.png', this.bullets);
+        this.player = new Player(this, this.cameras.main.centerX, this.cameras.main.height - 128, 'sprites', 'ship1_frame1.png', this.bullets);
         this.add.existing(this.player);
         this.player.getComponent(HealthComponent)?.once('death', () => this.endGame());
 

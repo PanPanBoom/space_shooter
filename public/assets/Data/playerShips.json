@@ -1,7 +1,7 @@
 {
     "1": {
         "movementSpeed": 0.6,
-        "texture": "ship.png",
+        "texture": "ship1_frame1.png",
         "body": {
             "radius": 49,
             "offsetX": -12,

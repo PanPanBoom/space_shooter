@@ -4,7 +4,7 @@
 			"image": "texture",
 			"format": "RGBA8888",
 			"size": {
-				"w": 84,
+				"w": 175,
 				"h": 509
 			},
 			"scale": 1,
@@ -94,23 +94,44 @@
 					}
 				},
 				{
-					"filename": "ship.png",
+					"filename": "ship1_frame1.png",
 					"rotated": false,
-					"trimmed": false,
+					"trimmed": true,
 					"sourceSize": {
-						"w": 75,
+						"w": 128,
 						"h": 98
 					},
 					"spriteSourceSize": {
-						"x": 0,
+						"x": 1,
 						"y": 0,
-						"w": 75,
+						"w": 100,
 						"h": 98
 					},
 					"frame": {
 						"x": 0,
 						"y": 411,
-						"w": 75,
+						"w": 100,
+						"h": 98
+					}
+				},
+				{
+					"filename": "ship1_frame2.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 128,
+						"h": 98
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 0,
+						"w": 100,
+						"h": 98
+					},
+					"frame": {
+						"x": 75,
+						"y": 312,
+						"w": 100,
 						"h": 98
 					}
 				}

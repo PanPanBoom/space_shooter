@@ -31,9 +31,22 @@ export class Player extends Entity
         this.addComponent(new MovementComponent());
         this.addComponent(new HealthComponent(1));
 
-        this.selectShip(1);
+        const defaultShip: number = 1;
+
+        this.selectShip(defaultShip);
 
         this.setAngle(-90);
+
+        this.anims.create({
+            key: 'shipIdle',
+            frames: [
+                { key: 'sprites', frame: 'ship' + defaultShip + '_frame1.png' },
+                { key: 'sprites', frame: 'ship' + defaultShip + '_frame2.png' }
+            ],
+            frameRate: 30,
+            repeat: -1
+        });
+        this.play('shipIdle')
     }
 
     private selectShip(shipId: number)
