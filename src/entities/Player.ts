@@ -1,6 +1,8 @@
 import { Entity } from "./Entity";
 import { WeaponComponent } from "../components/WeaponComponent";
 import { Physics, Scene, Types } from "phaser";
+import { MovementComponent } from "../components/MovementComponent";
+import { HealthComponent } from "../components/HealthComponent";
 
 export class Player extends Entity
 {
@@ -26,6 +28,8 @@ export class Player extends Entity
             console.error("No keyboard input");
 
         this.addComponent(new WeaponComponent(bullets, scene.sound.add("sfx_laser1"), 4, 12, 0xffe066, 1024));
+        this.addComponent(new MovementComponent());
+        this.addComponent(new HealthComponent(1));
 
         this.selectShip(1);
 
@@ -38,18 +42,20 @@ export class Player extends Entity
         this.playerShipData = playerShipsData[shipId];
 
         this.setTexture('sprites', this.playerShipData.texture);
+        this.getComponent(MovementComponent)?.setSpeed(this.playerShipData.movementSpeed);
         this.arcadeBody.setCircle(this.playerShipData.body.radius, this.playerShipData.body.offsetX, this.playerShipData.body.offsetY);
     }
 
-    public update(time: number, delta: number)
+    public preUpdate(time: number, delta: number)
     {
+        super.preUpdate(time, delta);
         if(this.playerShipData)
         {
             if(this.cursorKeys.left.isDown)
-                this.arcadeBody.x -= this.playerShipData.movementSpeed * delta;
+                this.getComponent(MovementComponent)?.moveHorizontally(this, -delta);
         
             else if(this.cursorKeys.right.isDown)
-                this.arcadeBody.x += this.playerShipData.movementSpeed * delta
+                this.getComponent(MovementComponent)?.moveHorizontally(this, delta);
         }
 
         if(this.cursorKeys.space.isDown && time - this.lastShotTime > this.rateOfFire * 1000)

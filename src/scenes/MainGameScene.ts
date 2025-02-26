@@ -5,6 +5,7 @@ import { Player } from '../entities/Player';
 import { Enemy } from '../entities/Enemy';
 import { GameDataKeys } from '../GameDataKey';
 import { SceneNames } from './SceneNames';
+import { HealthComponent } from '../components/HealthComponent';
 
 export class MainGameScene extends Scene
 {
@@ -39,6 +40,7 @@ export class MainGameScene extends Scene
             progressBar.clear();
             progressBar.fillStyle(0xffffff, 1);
             progressBar.fillRect(x, y, width * value, 64);
+            // value.toFixed(0);
         });
 
         this.load.on('complete', () => {
@@ -92,16 +94,28 @@ export class MainGameScene extends Scene
 
         this.player = new Player(this, this.cameras.main.centerX, this.cameras.main.height - 128, 'sprites', 'ship.png', this.bullets);
         this.add.existing(this.player);
+        this.player.getComponent(HealthComponent)?.once('death', () => this.endGame());
 
         this.physics.add.collider(this.bullets, this.enemies, (bullet, enemy) => {
-            bullet.destroy();
-            (enemy as Enemy).disable();
+            (bullet as Bullet).disable();
+            (enemy as Enemy).getComponent(HealthComponent)?.inc(-1);
+
             this.registry.inc(GameDataKeys.PLAYER_SCORE, 1);
         }, undefined, this);
 
-        this.physics.add.collider(this.enemiesBullets, this.player, () => {
-            this.scene.start(SceneNames.GAME_OVER_SCENE);
+        this.physics.add.collider(this.player, this.enemiesBullets, (player, bullet) => {
+            // (bullet as Bullet).disable();
+            // this.endGame();
+            (player as Player).getComponent(HealthComponent)?.inc(-1);
+            (bullet as Bullet).disable();
         });
+
+        this.physics.add.collider(this.enemies, this.player, (enemy, player) => {
+            const enemyHealth = (enemy as Enemy).getComponent(HealthComponent);
+            enemyHealth?.inc(-enemyHealth.getMax());
+            
+            (player as Player).getComponent(HealthComponent)?.inc(-1);
+        })
 
         this.time.addEvent({
             delay: 1500,
@@ -120,6 +134,11 @@ export class MainGameScene extends Scene
 
     }
 
+    private endGame()
+    {
+        this.scene.start(SceneNames.GAME_OVER_SCENE);
+    }
+
     private spawnEnemy()
     {
         const enemy = this.enemies.get() as Enemy;
@@ -131,6 +150,5 @@ export class MainGameScene extends Scene
     {
         this.bg.tilePositionY -= 0.1 * delta;
         this.planet.y += 0.4 * delta;
-        this.player.update(time, delta);
     }
 }

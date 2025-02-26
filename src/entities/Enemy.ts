@@ -1,6 +1,8 @@
 import { Animations, Physics, Scene, Time } from "phaser";
 import { Entity } from "./Entity";
 import { WeaponComponent } from "../components/WeaponComponent";
+import { MovementComponent } from "../components/MovementComponent";
+import { HealthComponent } from "../components/HealthComponent";
 
 export class Enemy extends Entity
 {
@@ -11,6 +13,8 @@ export class Enemy extends Entity
         this.setTexture(texture, frame);
         
         this.addComponent(new WeaponComponent(bullets, scene.sound.add("sfx_laser2"), 4, 12, 0xffe066, 1024));
+        this.addComponent(new MovementComponent(0.2));
+        this.addComponent(new HealthComponent(1));
 
         this.shootTimer = this.scene.time.addEvent({
             delay: Phaser.Math.Between(1000, 2500),
@@ -46,21 +50,18 @@ export class Enemy extends Entity
         this.setPosition(x, y);
         this.arcadeBody.setCircle(this.displayWidth * 0.65, -12, 5);
 
-        this.scene.physics.world.add(this.arcadeBody);
+        this.enableBody(true, x, y - this.displayHeight, true, true);
 
-        this.setActive(true);
-        this.setVisible(true);
-
-        this.arcadeBody.setVelocityY(256);
         this.shootTimer.paused = false;
+
+        this.getComponent(HealthComponent)?.once('death', () => {
+            this.disable();
+        });
     }
 
     public disable()
     {
-        this.scene.physics.world.remove(this.arcadeBody);
-        this.arcadeBody.setEnable(false);
-        this.setActive(false);
-        this.setVisible(false);
+        this.disableBody(true, true);
         this.shootTimer.paused = true;
     }
 
@@ -68,5 +69,7 @@ export class Enemy extends Entity
     {
         if(this.y >= this.scene.cameras.main.height + this.displayHeight)
             this.disable();
+
+        this.getComponent(MovementComponent)?.moveVertically(this, delta);
     }
 }
