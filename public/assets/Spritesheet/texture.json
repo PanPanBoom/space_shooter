@@ -4,8 +4,8 @@
 			"image": "texture",
 			"format": "RGBA8888",
 			"size": {
-				"w": 196,
-				"h": 528
+				"w": 184,
+				"h": 588
 			},
 			"scale": 1,
 			"frames": [
@@ -157,6 +157,27 @@
 					}
 				},
 				{
+					"filename": "flask_full.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"spriteSourceSize": {
+						"x": 2,
+						"y": 2,
+						"w": 60,
+						"h": 60
+					},
+					"frame": {
+						"x": 0,
+						"y": 410,
+						"w": 60,
+						"h": 60
+					}
+				},
+				{
 					"filename": "skull.png",
 					"rotated": false,
 					"trimmed": true,
@@ -172,7 +193,7 @@
 					},
 					"frame": {
 						"x": 0,
-						"y": 410,
+						"y": 470,
 						"w": 54,
 						"h": 60
 					}
@@ -193,7 +214,7 @@
 					},
 					"frame": {
 						"x": 0,
-						"y": 470,
+						"y": 530,
 						"w": 58,
 						"h": 58
 					}
@@ -214,7 +235,7 @@
 					},
 					"frame": {
 						"x": 54,
-						"y": 410,
+						"y": 470,
 						"w": 54,
 						"h": 58
 					}
@@ -234,8 +255,8 @@
 						"h": 56
 					},
 					"frame": {
-						"x": 100,
-						"y": 294,
+						"x": 60,
+						"y": 410,
 						"w": 96,
 						"h": 56
 					}
