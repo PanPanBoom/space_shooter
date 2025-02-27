@@ -99,7 +99,6 @@ export class MainGameScene extends Scene
 
         this.enemiesCount = 0;
         this.enemiesMax = parseInt((data.round * 2).toFixed(0));
-        console.log(this.enemiesMax);
 
         this.player = new Player(this, this.cameras.main.centerX, this.cameras.main.height - 128, 'sprites', 'ship1_frame1.png', this.bullets);
         this.add.existing(this.player);
@@ -113,13 +112,8 @@ export class MainGameScene extends Scene
             callbackScope: this,
             loop: true
         });
-        this.add.text(this.cameras.main.centerX, 16, "SCORE", { fontSize: '40px', align: 'center'}).setOrigin(0.5);
-        this.scoreText = this.add.text(this.cameras.main.centerX, 48, this.registry.get(GameDataKeys.PLAYER_SCORE), { fontSize: '40px', align: 'center'}).setOrigin(0.5);
 
-        this.registry.events.on("changedata-" + GameDataKeys.PLAYER_SCORE, (_: any, value: number) => {
-            this.scoreText.setText(value.toString());
-        });
-
+        this.scene.launch(SceneNames.USER_INTERFACE_SCENE);
     }
 
     private initCollisions()
