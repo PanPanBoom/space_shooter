@@ -14,9 +14,40 @@ export class MainMenuScene extends Scene
 
     preload()
     {
+        const width = this.cameras.main.width;
+
+        const x: number = 0;
+        const y: number = this.cameras.main.centerY;
+        
+        const progressBar = this.add.graphics();
+        const progressBox = this.add.graphics();
+        
+        progressBox.fillStyle(0x222222, 0.8);
+        progressBox.fillRect(x, y, width, 64);
+
+        this.load.on('progress', (value: number) => {
+            console.log(value);
+            progressBar.clear();
+            progressBar.fillStyle(0xffffff, 1);
+            progressBar.fillRect(x, y, width * value, 64);
+            // value.toFixed(0);
+        });
+
+        this.load.on('complete', () => {
+            console.log('complete');
+            progressBar.destroy();
+            progressBox.destroy();
+        });
+
         this.load.setPath('assets');
+        
         this.load.image('bg', 'Backgrounds/blue.png');
+        this.load.image('planet', 'Planets/planet06.png');
         this.load.atlas('sprites', 'Spritesheet/texture.png', 'Spritesheet/texture.json');
+        this.load.audio("sfx_laser1", "Sounds/sfx_laser1.ogg");
+        this.load.audio("sfx_laser2", "Sounds/sfx_laser2.ogg");
+
+        this.load.json("playerShips", "Data/playerShips.json");
         this.load.font('future', 'Fonts/kenvector_future.ttf');
     }
 

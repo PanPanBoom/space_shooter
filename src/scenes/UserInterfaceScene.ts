@@ -1,25 +1,20 @@
-import { GameObjects, Physics, Scene, Types } from "phaser";
+import { GameObjects, Scene, Types } from "phaser";
 import { GameDataKeys } from "../GameDataKey";
 import { SceneNames } from "./SceneNames";
 import { Enemy } from "../entities/Enemy";
 import { HealthComponent } from "../components/HealthComponent";
+import { UserInterfaceData } from "../gameData/RoundInitData";
 
 export class UserInterfaceScene extends Scene
 {
     private playerScoreText: GameObjects.Text;
     private enemiesLeftCounter: number;
     private enemiesLeftCounterText: GameObjects.Text;
+    private playerLivesText: GameObjects.Text;
 
     constructor()
     {
         super(SceneNames.USER_INTERFACE_SCENE);
-    }
-
-    preload()
-    {
-        this.load.setPath('assets');
-
-        this.load.font('future', 'Fonts/kenvector_future.ttf');
     }
 
     create(data: UserInterfaceData)
@@ -39,12 +34,16 @@ export class UserInterfaceScene extends Scene
         });
 
         this.enemiesLeftCounter = data.enemiesLeft;
-        const enemiesLeftText = this.add.text(offset, offset, "ENEMIES LEFT", textStyle);
-        this.enemiesLeftCounterText = this.add.text(enemiesLeftText.x + enemiesLeftText.displayWidth / 2, offset + enemiesLeftText.displayHeight, this.enemiesLeftCounter.toString(), textStyle).setOrigin(0.5, 0);
+        const skullImage = this.add.image(offset, offset, "sprites", "skull.png").setOrigin(0);
+        this.enemiesLeftCounterText = this.add.text(skullImage.x + skullImage.displayWidth, skullImage.y + skullImage.displayHeight / 2, this.enemiesLeftCounter.toString(), textStyle).setOrigin(0, 0.5);
 
         data.enemies.getChildren().forEach(enemy => {
             (enemy as Enemy).getComponent(HealthComponent)?.on('death', () => this.incEnemiesLeftCount(-1));
         });
+
+        const shieldImage = this.add.image(this.cameras.main.width - offset, this.cameras.main.height - offset, "sprites", "shield.png").setOrigin(1);
+        const playerHealth = data.player.getComponent(HealthComponent);
+        this.playerLivesText = this.add.text(shieldImage.x - shieldImage.width, shieldImage.y - shieldImage.displayHeight / 2, playerHealth ? playerHealth?.getValue().toString() : "?", textStyle).setOrigin(1, 0.5);
     }
 
     private incEnemiesLeftCount(inc: number)
