@@ -6,6 +6,7 @@ import { Enemy } from '../entities/Enemy';
 import { GameDataKeys } from '../GameDataKey';
 import { SceneNames } from './SceneNames';
 import { HealthComponent } from '../components/HealthComponent';
+import { UserInterfaceScene } from './UserInterfaceScene';
 
 export class MainGameScene extends Scene
 {
@@ -15,9 +16,9 @@ export class MainGameScene extends Scene
     private enemiesBullets: Physics.Arcade.Group;
     private bg: Phaser.GameObjects.TileSprite;
     private planet: Phaser.GameObjects.Image;
-    private scoreText: Phaser.GameObjects.Text;
     private enemiesCount: number;
     private enemiesMax: number;
+    private enemiesLeft: number;
     private roundNumber: number;
 
     constructor ()
@@ -99,6 +100,7 @@ export class MainGameScene extends Scene
 
         this.enemiesCount = 0;
         this.enemiesMax = parseInt((data.round * 2).toFixed(0));
+        this.enemiesLeft = this.enemiesMax;
 
         this.player = new Player(this, this.cameras.main.centerX, this.cameras.main.height - 128, 'sprites', 'ship1_frame1.png', this.bullets);
         this.add.existing(this.player);
@@ -113,7 +115,15 @@ export class MainGameScene extends Scene
             loop: true
         });
 
-        this.scene.launch(SceneNames.USER_INTERFACE_SCENE);
+        this.scene.launch(SceneNames.USER_INTERFACE_SCENE, {round: this.roundNumber, enemiesLeft: this.enemiesLeft});
+
+        this.enemies.getChildren().forEach(enemy => {
+            enemy.once('death', () => {
+                console.log("enemy dead");
+                this.enemiesLeft--;
+                (this.scene.get(SceneNames.USER_INTERFACE_SCENE) as UserInterfaceScene).updateEnemiesLeftCount(this.enemiesLeft);
+            })
+        })
     }
 
     private initCollisions()
@@ -149,7 +159,7 @@ export class MainGameScene extends Scene
             return;
 
         const enemy = this.enemies.get() as Enemy;
-        enemy.enable(Phaser.Math.Between(0, this.cameras.main.width), 0, "sprites", "enemy.png");
+        enemy.enable(Phaser.Math.Between(0, this.cameras.main.width), 0, "sprites", "enemy.png", (this.scene.get(SceneNames.USER_INTERFACE_SCENE) as UserInterfaceScene));
         this.enemiesCount++;
     }
 

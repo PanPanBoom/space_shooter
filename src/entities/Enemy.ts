@@ -3,6 +3,7 @@ import { Entity } from "./Entity";
 import { WeaponComponent } from "../components/WeaponComponent";
 import { MovementComponent } from "../components/MovementComponent";
 import { HealthComponent } from "../components/HealthComponent";
+import { UserInterfaceScene } from "../scenes/UserInterfaceScene";
 
 export class Enemy extends Entity
 {
@@ -44,7 +45,7 @@ export class Enemy extends Entity
         });
     }
 
-    public enable(x: number, y: number, texture: string, frame: string)
+    public enable(x: number, y: number, texture: string, frame: string, ui: UserInterfaceScene)
     {
         this.setTexture(texture, frame);
         this.setPosition(x, y);
@@ -55,6 +56,7 @@ export class Enemy extends Entity
         this.shootTimer.paused = false;
 
         this.getComponent(HealthComponent)?.once('death', () => {
+            ui.incEnemiesLeftCount(-1);
             this.disable();
         });
     }
