@@ -7,9 +7,9 @@ export class Potion extends Item
 {
     constructor(scene: Scene, x: number, y: number)
     {
-        super(scene, x, y, "sprites", "flask.png");
+        super(scene, x, y, "sprites", "flask_full.png");
     }
-    
+
     public apply(player: Player): void
     {
         player.getComponent(HealthComponent)?.inc(1);

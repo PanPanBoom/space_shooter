@@ -9,6 +9,7 @@ import { HealthComponent } from '../components/HealthComponent';
 import { UserInterfaceScene } from './UserInterfaceScene';
 import { RoundInitData } from '../gameData/RoundInitData';
 import { BaseScene } from './BaseScene';
+import { Potion } from '../items/Potion';
 
 export class MainGameScene extends BaseScene
 {
@@ -97,6 +98,7 @@ export class MainGameScene extends BaseScene
         });
 
         this.physics.add.overlap(this.player, this.enemiesBullets, (player, bullet) => {
+            this.registry.inc(GameDataKeys.PLAYER_LIFE, -1);
             (player as Player).getComponent(HealthComponent)?.inc(-1);
             (bullet as Bullet).disable();
         });
