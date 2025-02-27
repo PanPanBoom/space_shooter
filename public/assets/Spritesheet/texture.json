@@ -4,8 +4,8 @@
 			"image": "texture",
 			"format": "RGBA8888",
 			"size": {
-				"w": 184,
-				"h": 584
+				"w": 196,
+				"h": 528
 			},
 			"scale": 1,
 			"frames": [
@@ -178,6 +178,27 @@
 					}
 				},
 				{
+					"filename": "tokens.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"spriteSourceSize": {
+						"x": 3,
+						"y": 3,
+						"w": 58,
+						"h": 58
+					},
+					"frame": {
+						"x": 0,
+						"y": 470,
+						"w": 58,
+						"h": 58
+					}
+				},
+				{
 					"filename": "shield.png",
 					"rotated": false,
 					"trimmed": true,
@@ -192,8 +213,8 @@
 						"h": 58
 					},
 					"frame": {
-						"x": 0,
-						"y": 470,
+						"x": 54,
+						"y": 410,
 						"w": 54,
 						"h": 58
 					}
@@ -213,8 +234,8 @@
 						"h": 56
 					},
 					"frame": {
-						"x": 0,
-						"y": 528,
+						"x": 100,
+						"y": 294,
 						"w": 96,
 						"h": 56
 					}

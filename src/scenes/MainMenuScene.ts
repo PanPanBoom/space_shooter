@@ -1,10 +1,10 @@
 import { Game, GameObjects, Scene, Types } from "phaser";
 import { SceneNames } from "./SceneNames";
 import { GameDataKeys } from "../GameDataKey";
+import { BaseScene } from "./BaseScene";
 
-export class MainMenuScene extends Scene
+export class MainMenuScene extends BaseScene
 {
-    private bg: GameObjects.TileSprite;
     private playerShip: GameObjects.Sprite;
 
     constructor()
@@ -14,6 +14,7 @@ export class MainMenuScene extends Scene
 
     preload()
     {
+        super.preload();
         const width = this.cameras.main.width;
 
         const x: number = 0;
@@ -26,11 +27,9 @@ export class MainMenuScene extends Scene
         progressBox.fillRect(x, y, width, 64);
 
         this.load.on('progress', (value: number) => {
-            console.log(value);
             progressBar.clear();
             progressBar.fillStyle(0xffffff, 1);
             progressBar.fillRect(x, y, width * value, 64);
-            // value.toFixed(0);
         });
 
         this.load.on('complete', () => {
@@ -39,9 +38,6 @@ export class MainMenuScene extends Scene
             progressBox.destroy();
         });
 
-        this.load.setPath('assets');
-        
-        this.load.image('bg', 'Backgrounds/blue.png');
         this.load.image('planet', 'Planets/planet06.png');
         this.load.atlas('sprites', 'Spritesheet/texture.png', 'Spritesheet/texture.json');
         this.load.audio("sfx_laser1", "Sounds/sfx_laser1.ogg");
@@ -53,8 +49,7 @@ export class MainMenuScene extends Scene
 
     create()
     {
-        this.bg = this.add.tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, "bg").setOrigin(0).setTileScale(2);
-
+        super.create();
         const playerShipOffsetX = 64;
         this.playerShip = this.add.sprite(this.cameras.main.centerX - playerShipOffsetX, this.cameras.main.centerY, 'sprites', 'ship1_frame1.png').setAngle(-90);
         
@@ -121,11 +116,5 @@ export class MainMenuScene extends Scene
         }));
 
         this.registry.set<number>(GameDataKeys.PLAYER_SCORE, 0);
-    }
-
-    update(time: number, delta: number)
-    {
-        this.bg.tilePositionY -= 0.1 * delta;
-        console.log(this.playerShip.x + ", " + this.playerShip.y);
     }
 }

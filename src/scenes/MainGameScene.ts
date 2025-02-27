@@ -8,14 +8,14 @@ import { SceneNames } from './SceneNames';
 import { HealthComponent } from '../components/HealthComponent';
 import { UserInterfaceScene } from './UserInterfaceScene';
 import { RoundInitData } from '../gameData/RoundInitData';
+import { BaseScene } from './BaseScene';
 
-export class MainGameScene extends Scene
+export class MainGameScene extends BaseScene
 {
     private player: Player;
     private bullets: Physics.Arcade.Group;
     private enemies: Physics.Arcade.Group;
     private enemiesBullets: Physics.Arcade.Group;
-    private bg: Phaser.GameObjects.TileSprite;
     private planet: Phaser.GameObjects.Image;
     private enemiesCount: number;
     private enemiesMax: number;
@@ -30,10 +30,10 @@ export class MainGameScene extends Scene
 
     create (data: RoundInitData)
     {
+        super.create();
         const colorPalette: string[] = ["8A95A5", "3A1772", "9990D35", "F2CD5D", "61E86"];
         this.cameras.main.setBackgroundColor(0x50514f);
 
-        this.bg = this.add.tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, "bg").setOrigin(0).setTileScale(2);
         this.planet = this.add.image(0, -512, 'planet').setOrigin(0);
 
         this.roundNumber = data.round;
@@ -142,7 +142,7 @@ export class MainGameScene extends Scene
 
     update(time: number, delta: number)
     {
-        this.bg.tilePositionY -= 0.1 * delta;
+        super.update(time, delta);
         this.planet.y += 0.4 * delta;
 
         if(this.enemies.countActive() == 0 && this.enemiesCount >= this.enemiesMax && !this.isRoundCleared)

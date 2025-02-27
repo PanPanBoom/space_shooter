@@ -1,6 +1,6 @@
-import { Physics } from "phaser";
+import { GameObjects, Physics } from "phaser";
 
-export class Bullet extends Phaser.GameObjects.Rectangle
+export class Bullet extends GameObjects.Rectangle
 {
     private arcadeBody: Physics.Arcade.Body;
 

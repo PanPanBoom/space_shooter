@@ -10,6 +10,7 @@ export class Player extends Entity
     private playerShipData: PlayerShipData;
     private lastShotTime: number;
     private cursorKeys: Types.Input.Keyboard.CursorKeys;
+    private coinsAmount: number;
 
     public constructor(scene: Scene, x: number, y: number, texture: string, frame: string, bullets: Physics.Arcade.Group)
     {
@@ -17,6 +18,7 @@ export class Player extends Entity
 
         this.rateOfFire = 0.5;
         this.lastShotTime = 0;
+        this.coinsAmount = 0;
 
         if(this.scene.input.keyboard)
         {
@@ -98,5 +100,10 @@ export class Player extends Entity
         }
 
         this.x = Phaser.Math.Clamp(this.x, this.displayWidth / 2, this.scene.cameras.main.width - this.displayWidth / 2);
+    }
+
+    public getCoinsAmount()
+    {
+        return this.coinsAmount;
     }
 }

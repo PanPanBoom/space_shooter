@@ -7,11 +7,12 @@ import { UserInterfaceData } from "../gameData/RoundInitData";
 
 export class UserInterfaceScene extends Scene
 {
+    private generalTextStyle: Types.GameObjects.Text.TextStyle;
     private playerScoreText: GameObjects.Text;
     private enemiesLeftCounter: number;
     private enemiesLeftCounterText: GameObjects.Text;
     private playerLivesText: GameObjects.Text;
-    private generalTextStyle: Types.GameObjects.Text.TextStyle;
+    private playerCoinsText: GameObjects.Text;
 
     constructor()
     {
@@ -53,6 +54,9 @@ export class UserInterfaceScene extends Scene
         this.playerLivesText = this.add.text(shieldImage.x - shieldImage.width, shieldImage.y - shieldImage.displayHeight / 2, playerHealth ? playerHealth?.getValue().toString() : "?", textStyle).setOrigin(1, 0.5);
         playerHealth?.on('change', () => this.playerLivesText.setText(playerHealth.getValue().toString()));
     
+        const coinImage = this.add.image(shieldImage.x, shieldImage.y - shieldImage.displayHeight - offset, "sprites", "tokens.png").setOrigin(1);
+        this.playerCoinsText = this.add.text(this.playerLivesText.x, coinImage.y, data.player.getCoinsAmount().toString(), textStyle).setOrigin(1);
+
         this.launchRoundBeginText(data.round);
     }
 
