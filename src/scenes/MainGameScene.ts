@@ -115,15 +115,7 @@ export class MainGameScene extends Scene
             loop: true
         });
 
-        this.scene.launch(SceneNames.USER_INTERFACE_SCENE, {round: this.roundNumber, enemiesLeft: this.enemiesLeft});
-
-        this.enemies.getChildren().forEach(enemy => {
-            enemy.once('death', () => {
-                console.log("enemy dead");
-                this.enemiesLeft--;
-                (this.scene.get(SceneNames.USER_INTERFACE_SCENE) as UserInterfaceScene).updateEnemiesLeftCount(this.enemiesLeft);
-            })
-        })
+        this.scene.launch(SceneNames.USER_INTERFACE_SCENE, {round: this.roundNumber, enemiesLeft: this.enemiesLeft, enemies: this.enemies});
     }
 
     private initCollisions()

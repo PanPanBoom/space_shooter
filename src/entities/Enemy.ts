@@ -56,7 +56,7 @@ export class Enemy extends Entity
         this.shootTimer.paused = false;
 
         this.getComponent(HealthComponent)?.once('death', () => {
-            ui.incEnemiesLeftCount(-1);
+            // ui.incEnemiesLeftCount(-1);
             this.disable();
         });
     }
@@ -69,8 +69,9 @@ export class Enemy extends Entity
 
     public update(time: number, delta: number)
     {
+        const health = this.getComponent(HealthComponent);
         if(this.y >= this.scene.cameras.main.height + this.displayHeight)
-            this.disable();
+            health?.inc(-health.getMax());
 
         this.getComponent(MovementComponent)?.moveVertically(this, delta);
     }

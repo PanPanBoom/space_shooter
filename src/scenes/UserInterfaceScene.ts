@@ -1,6 +1,8 @@
-import { GameObjects, Scene, Types } from "phaser";
+import { GameObjects, Physics, Scene, Types } from "phaser";
 import { GameDataKeys } from "../GameDataKey";
 import { SceneNames } from "./SceneNames";
+import { Enemy } from "../entities/Enemy";
+import { HealthComponent } from "../components/HealthComponent";
 
 export class UserInterfaceScene extends Scene
 {
@@ -29,8 +31,8 @@ export class UserInterfaceScene extends Scene
             align: 'center'
         };
 
-        const scoreText = this.add.text(this.cameras.main.centerX, offset, "SCORE", textStyle).setOrigin(0.5, 0);
-        this.playerScoreText = this.add.text(this.cameras.main.centerX, offset + scoreText.displayHeight, this.registry.get(GameDataKeys.PLAYER_SCORE), textStyle).setOrigin(0.5, 0);
+        const scoreText = this.add.text(this.cameras.main.width - offset, offset, "SCORE", textStyle).setOrigin(1, 0);
+        this.playerScoreText = this.add.text(scoreText.x - scoreText.displayWidth / 2, offset + scoreText.displayHeight, this.registry.get(GameDataKeys.PLAYER_SCORE), textStyle).setOrigin(0.5, 0);
 
         this.registry.events.on("changedata-" + GameDataKeys.PLAYER_SCORE, (_: any, value: number) => {
             this.playerScoreText.setText(value.toString());
@@ -40,12 +42,14 @@ export class UserInterfaceScene extends Scene
         const enemiesLeftText = this.add.text(offset, offset, "ENEMIES LEFT", textStyle);
         this.enemiesLeftCounterText = this.add.text(enemiesLeftText.x + enemiesLeftText.displayWidth / 2, offset + enemiesLeftText.displayHeight, this.enemiesLeftCounter.toString(), textStyle).setOrigin(0.5, 0);
 
-        this.add.text(this.cameras.main.width - offset, offset, "ROUND " + data.round, textStyle).setOrigin(1, 0);
+        data.enemies.getChildren().forEach(enemy => {
+            (enemy as Enemy).getComponent(HealthComponent)?.on('death', () => this.incEnemiesLeftCount(-1));
+        });
     }
 
-    public incEnemiesLeftCount(inc: number)
+    private incEnemiesLeftCount(inc: number)
     {
-        this.enemiesLeftCounter--;
+        this.enemiesLeftCounter += inc;
         this.enemiesLeftCounterText.setText(this.enemiesLeftCounter.toString());
     }
 }
