@@ -71,7 +71,10 @@ export class Enemy extends Entity
     {
         const health = this.getComponent(HealthComponent);
         if(this.y >= this.scene.cameras.main.height + this.displayHeight)
+        {
             health?.inc(-health.getMax());
+            this.emit('outscreen');
+        }
 
         this.getComponent(MovementComponent)?.moveVertically(this, delta);
     }

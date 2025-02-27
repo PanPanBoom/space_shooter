@@ -36,9 +36,6 @@ export class Player extends Entity
         this.selectShip(defaultShip);
 
         this.setAngle(-90);
-
-        const playerShipsData = this.scene.cache.json.get("playerShips") as PlayerShipsData;
-        this.play('shipIdle');
     }
 
     private createAnimation(shipId: number)

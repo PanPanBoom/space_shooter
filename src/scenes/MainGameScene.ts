@@ -52,11 +52,16 @@ export class MainGameScene extends Scene
         this.enemiesBullets = this.physics.add.group(bulletConfig);
         GroupUtils.preallocateGroup(this.enemiesBullets, 5);
 
+        this.player = new Player(this, this.cameras.main.centerX, this.cameras.main.height - 128, 'sprites', 'ship1_frame1.png', this.bullets);
+        this.add.existing(this.player);
+        this.player.getComponent(HealthComponent)?.once('death', () => this.endGame());
+
         this.enemies = this.physics.add.group({
             classType: Enemy,
             runChildUpdate: true,
             createCallback: (enemy) => {
                 (enemy as Enemy).init(this, "sprites", "enemy.png", this.enemiesBullets);
+                (enemy as Enemy).on('outscreen', () => this.player.getComponent(HealthComponent)?.inc(-1));
             },
             maxSize: 6
         });
@@ -65,10 +70,6 @@ export class MainGameScene extends Scene
         this.enemiesCount = 0;
         this.enemiesMax = parseInt((data.round * 2).toFixed(0));
         this.enemiesLeft = this.enemiesMax;
-
-        this.player = new Player(this, this.cameras.main.centerX, this.cameras.main.height - 128, 'sprites', 'ship1_frame1.png', this.bullets);
-        this.add.existing(this.player);
-        this.player.getComponent(HealthComponent)?.once('death', () => this.endGame());
 
         this.initCollisions();
 
@@ -123,6 +124,8 @@ export class MainGameScene extends Scene
 
         if(this.input.keyboard)
             this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE).on('down', () => this.scene.start(SceneNames.MAIN_GAME_SCENE, {round: this.roundNumber + 1}));
+        else
+            console.error("No keyboard input");
     }
 
     private spawnEnemy()
