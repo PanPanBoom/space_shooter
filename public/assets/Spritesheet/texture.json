@@ -5,7 +5,7 @@
 			"format": "RGBA8888",
 			"size": {
 				"w": 184,
-				"h": 410
+				"h": 584
 			},
 			"scale": 1,
 			"frames": [
@@ -154,6 +154,69 @@
 						"y": 196,
 						"w": 75,
 						"h": 98
+					}
+				},
+				{
+					"filename": "skull.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"spriteSourceSize": {
+						"x": 5,
+						"y": 2,
+						"w": 54,
+						"h": 60
+					},
+					"frame": {
+						"x": 0,
+						"y": 410,
+						"w": 54,
+						"h": 60
+					}
+				},
+				{
+					"filename": "shield.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"spriteSourceSize": {
+						"x": 5,
+						"y": 3,
+						"w": 54,
+						"h": 58
+					},
+					"frame": {
+						"x": 0,
+						"y": 470,
+						"w": 54,
+						"h": 58
+					}
+				},
+				{
+					"filename": "space.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 16,
+						"y": 36,
+						"w": 96,
+						"h": 56
+					},
+					"frame": {
+						"x": 0,
+						"y": 528,
+						"w": 96,
+						"h": 56
 					}
 				}
 			]
