@@ -5,6 +5,7 @@ import { MovementComponent } from "../components/MovementComponent";
 import { HealthComponent } from "../components/HealthComponent";
 import { Bullet } from "./Bullet";
 import { GroupUtils } from "../utils/GroupUtils";
+import { GameDataKeys } from "../GameDataKey";
 
 export class Player extends Entity
 {
@@ -42,7 +43,7 @@ export class Player extends Entity
 
         this.addComponent(new WeaponComponent(this.bullets, scene.sound.add("sfx_laser1"), 4, 12, 0xffe066, 1024));
         this.addComponent(new MovementComponent());
-        this.addComponent(new HealthComponent(3));
+        this.addComponent(new HealthComponent(this.scene.registry.get(GameDataKeys.PLAYER_LIFE)));
 
         const defaultShip: number = 1;
 

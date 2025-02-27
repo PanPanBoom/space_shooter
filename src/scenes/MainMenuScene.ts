@@ -120,8 +120,9 @@ export class MainMenuScene extends BaseScene
     {
         this.registry.set(GameDataKeys.PLAYER_SCORE, 0);
         this.registry.set(GameDataKeys.PLAYER_COINS, 0);
+        this.registry.set(GameDataKeys.PLAYER_LIFE, 3);
 
-        this.scene.start(SceneNames.MAIN_GAME_SCENE, {
+        this.scene.start(SceneNames.SHOP_SCENE, {
             round: 1
         });
     }
