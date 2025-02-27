@@ -29,7 +29,7 @@ export class Player extends Entity
 
         this.addComponent(new WeaponComponent(bullets, scene.sound.add("sfx_laser1"), 4, 12, 0xffe066, 1024));
         this.addComponent(new MovementComponent());
-        this.addComponent(new HealthComponent(1));
+        this.addComponent(new HealthComponent(3));
 
         const defaultShip: number = 1;
 

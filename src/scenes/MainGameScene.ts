@@ -21,6 +21,7 @@ export class MainGameScene extends Scene
     private enemiesMax: number;
     private enemiesLeft: number;
     private roundNumber: number;
+    private isRoundCleared: boolean;
 
     constructor ()
     {
@@ -79,6 +80,7 @@ export class MainGameScene extends Scene
         });
 
         this.scene.launch(SceneNames.USER_INTERFACE_SCENE, {round: this.roundNumber, enemiesLeft: this.enemiesLeft, enemies: this.enemies, player: this.player});
+        this.isRoundCleared = false;
     }
 
     private initCollisions()
@@ -90,7 +92,7 @@ export class MainGameScene extends Scene
             this.registry.inc(GameDataKeys.PLAYER_SCORE, 1);
         });
 
-        this.physics.add.collider(this.player, this.enemiesBullets, (player, bullet) => {
+        this.physics.add.overlap(this.player, this.enemiesBullets, (player, bullet) => {
             (player as Player).getComponent(HealthComponent)?.inc(-1);
             (bullet as Bullet).disable();
         });
@@ -108,6 +110,21 @@ export class MainGameScene extends Scene
         this.scene.start(SceneNames.GAME_OVER_SCENE);
     }
 
+    private roundCleared()
+    {
+        this.isRoundCleared = true;
+        this.enemies.emit('dead');
+        this.tweens.add({
+            targets: this.player,
+            y: -this.player.displayHeight,
+            duration: 1500,
+            ease: 'Quart.easeIn'
+        });
+
+        if(this.input.keyboard)
+            this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE).on('down', () => this.scene.start(SceneNames.MAIN_GAME_SCENE, {round: this.roundNumber + 1}));
+    }
+
     private spawnEnemy()
     {
         if(this.enemies.countActive() >= 5 || this.enemiesCount >= this.enemiesMax)
@@ -123,7 +140,7 @@ export class MainGameScene extends Scene
         this.bg.tilePositionY -= 0.1 * delta;
         this.planet.y += 0.4 * delta;
 
-        if(this.enemies.countActive() == 0 && this.enemiesCount >= this.enemiesMax)
-            this.scene.start(SceneNames.MAIN_GAME_SCENE, {round: this.roundNumber + 1});
+        if(this.enemies.countActive() == 0 && this.enemiesCount >= this.enemiesMax && !this.isRoundCleared)
+            this.roundCleared();
     }
 }
