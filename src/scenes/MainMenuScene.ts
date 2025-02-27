@@ -1,4 +1,4 @@
-import { Game, GameObjects, Scene } from "phaser";
+import { Game, GameObjects, Scene, Types } from "phaser";
 import { SceneNames } from "./SceneNames";
 import { GameDataKeys } from "../GameDataKey";
 
@@ -69,7 +69,7 @@ export class MainMenuScene extends Scene
         });
         this.playerShip.play('playerShipIdle');
 
-        this.tweens.add({
+        const shipFlyingTween = this.tweens.add({
             targets: this.playerShip,
             x: '+= ' + playerShipOffsetX * 2,
             duration: 700,
@@ -87,16 +87,38 @@ export class MainMenuScene extends Scene
         //     ease: 'Quad.easeInOut'
         // });
 
-        const fontSize = 64;
+        const textStyle: Types.GameObjects.Text.TextStyle = {
+            fontSize: '64px',
+            color: 'white',
+            fontFamily: 'future'
+        }
 
-        this.add.text(this.cameras.main.centerX, 256, 'Main Menu', {fontSize: fontSize + 'px', color: 'white', fontFamily: 'future'}).setOrigin(0.5);
-        this.add.text(this.cameras.main.centerX, this.cameras.main.height - 256, 'Press SPACE to start', {fontSize: fontSize + 'px', color: 'white', fontFamily: 'future'}).setOrigin(0.5);
-
-        this.input.keyboard?.once('keydown-SPACE', () => {
-            this.scene.start(SceneNames.MAIN_GAME_SCENE, {
-                round: 1
-            });
+        this.add.text(this.cameras.main.centerX, 256, 'Main Menu', textStyle).setOrigin(0.5);
+        const spaceKeyImage = this.add.image(this.cameras.main.centerX, this.cameras.main.height - 256, 'sprites', "space.png").setOrigin(0.5).setScale(2).setAlpha(0);
+        this.add.tween({
+            targets: spaceKeyImage,
+            alpha: 1,
+            ease: 'Quad.easeInOut',
+            repeat: -1,
+            yoyo: true,
+            duration: 1000
         });
+
+        const shipLeavingTween = this.tweens.add({
+            targets: this.playerShip,
+            y: -this.playerShip.displayHeight,
+            duration: 1500,
+            ease: 'Quart.easeIn'
+        }).pause();
+        
+        this.input.keyboard?.once('keydown-SPACE', () => {
+            shipFlyingTween.stop();
+            shipLeavingTween.resume();
+        });
+
+        shipLeavingTween.once('complete', () => this.scene.start(SceneNames.MAIN_GAME_SCENE, {
+            round: 1
+        }));
 
         this.registry.set<number>(GameDataKeys.PLAYER_SCORE, 0);
     }
@@ -104,5 +126,6 @@ export class MainMenuScene extends Scene
     update(time: number, delta: number)
     {
         this.bg.tilePositionY -= 0.1 * delta;
+        console.log(this.playerShip.x + ", " + this.playerShip.y);
     }
 }

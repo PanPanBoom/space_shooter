@@ -51,6 +51,16 @@ export class Player extends Entity
         });
     }
 
+    public roundCleared()
+    {
+        this.scene.tweens.add({
+            targets: this,
+            y: -this.displayHeight,
+            duration: 1500,
+            ease: 'Quart.easeIn'
+        });
+    }
+
     private selectShip(shipId: number)
     {
         const playerShipsData = this.scene.cache.json.get("playerShips") as PlayerShipsData;

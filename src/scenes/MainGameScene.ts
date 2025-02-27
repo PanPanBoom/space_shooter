@@ -52,9 +52,16 @@ export class MainGameScene extends Scene
         this.enemiesBullets = this.physics.add.group(bulletConfig);
         GroupUtils.preallocateGroup(this.enemiesBullets, 5);
 
-        this.player = new Player(this, this.cameras.main.centerX, this.cameras.main.height - 128, 'sprites', 'ship1_frame1.png', this.bullets);
+        this.player = new Player(this, this.cameras.main.centerX, this.cameras.main.height + 200, 'sprites', 'ship1_frame1.png', this.bullets);
         this.add.existing(this.player);
         this.player.getComponent(HealthComponent)?.once('death', () => this.endGame());
+
+        this.add.tween({
+            targets: this.player,
+            ease: 'Linear',
+            duration: 1500,
+            y: this.cameras.main.height - 128
+        });
 
         this.enemies = this.physics.add.group({
             classType: Enemy,
@@ -115,12 +122,7 @@ export class MainGameScene extends Scene
     {
         this.isRoundCleared = true;
         this.enemies.emit('dead');
-        this.tweens.add({
-            targets: this.player,
-            y: -this.player.displayHeight,
-            duration: 1500,
-            ease: 'Quart.easeIn'
-        });
+        this.player.roundCleared();
 
         if(this.input.keyboard)
             this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE).on('down', () => this.scene.start(SceneNames.MAIN_GAME_SCENE, {round: this.roundNumber + 1}));
