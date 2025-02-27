@@ -1,7 +1,9 @@
-import { Game, GameObjects, Scene, Types } from "phaser";
+import { Game, GameObjects, Physics, Scene, Types } from "phaser";
 import { SceneNames } from "./SceneNames";
 import { GameDataKeys } from "../GameDataKey";
 import { BaseScene } from "./BaseScene";
+import { Player } from "../entities/Player";
+import { MainGameScene } from "./MainGameScene";
 
 export class MainMenuScene extends BaseScene
 {
@@ -89,7 +91,7 @@ export class MainMenuScene extends BaseScene
         }
 
         this.add.text(this.cameras.main.centerX, 256, 'Main Menu', textStyle).setOrigin(0.5);
-        const spaceKeyImage = this.add.image(this.cameras.main.centerX, this.cameras.main.height - 256, 'sprites', "space.png").setOrigin(0.5).setScale(2).setAlpha(0);
+        const spaceKeyImage = this.add.image(this.cameras.main.centerX, this.cameras.main.height - 256, 'sprites', "space.png").setOrigin(0.5).setScale(2).setAlpha(0.2);
         this.add.tween({
             targets: spaceKeyImage,
             alpha: 1,
@@ -111,10 +113,16 @@ export class MainMenuScene extends BaseScene
             shipLeavingTween.resume();
         });
 
-        shipLeavingTween.once('complete', () => this.scene.start(SceneNames.MAIN_GAME_SCENE, {
-            round: 1
-        }));
+        shipLeavingTween.once('complete', () => this.launchGame());
+    }
 
-        this.registry.set<number>(GameDataKeys.PLAYER_SCORE, 0);
+    private launchGame()
+    {
+        this.registry.set(GameDataKeys.PLAYER_SCORE, 0);
+        this.registry.set(GameDataKeys.PLAYER_COINS, 0);
+
+        this.scene.start(SceneNames.MAIN_GAME_SCENE, {
+            round: 1
+        });
     }
 }

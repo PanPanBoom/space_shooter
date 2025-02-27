@@ -1,4 +1,4 @@
-import { Game, GameObjects, Math, Physics, Scene } from 'phaser';
+import { Physics } from 'phaser';
 import { Bullet } from '../entities/Bullet';
 import { GroupUtils } from '../utils/GroupUtils';
 import { Player } from '../entities/Player';
@@ -13,7 +13,6 @@ import { BaseScene } from './BaseScene';
 export class MainGameScene extends BaseScene
 {
     private player: Player;
-    private bullets: Physics.Arcade.Group;
     private enemies: Physics.Arcade.Group;
     private enemiesBullets: Physics.Arcade.Group;
     private planet: Phaser.GameObjects.Image;
@@ -38,21 +37,17 @@ export class MainGameScene extends BaseScene
 
         this.roundNumber = data.round;
 
-        const bulletConfig = {
+        this.enemiesBullets = this.physics.add.group({
             classType: Bullet,
             runChildUpdate: true,
             createCallback: (bullet) => {
                 (bullet as Bullet).init();
             },
             maxSize: 1024
-        };
-        this.bullets = this.physics.add.group(bulletConfig);
-        GroupUtils.preallocateGroup(this.bullets, 5);
-
-        this.enemiesBullets = this.physics.add.group(bulletConfig);
+        });
         GroupUtils.preallocateGroup(this.enemiesBullets, 5);
 
-        this.player = new Player(this, this.cameras.main.centerX, this.cameras.main.height + 200, 'sprites', 'ship1_frame1.png', this.bullets);
+        this.player = new Player(this, this.cameras.main.centerX, this.cameras.main.height + 200, 'sprites', 'ship1_frame1.png');
         this.add.existing(this.player);
         this.player.getComponent(HealthComponent)?.once('death', () => this.endGame());
 
@@ -93,11 +88,12 @@ export class MainGameScene extends BaseScene
 
     private initCollisions()
     {
-        this.physics.add.collider(this.bullets, this.enemies, (bullet, enemy) => {
+        this.physics.add.collider(this.player.getBullets(), this.enemies, (bullet, enemy) => {
             (bullet as Bullet).disable();
             (enemy as Enemy).getComponent(HealthComponent)?.inc(-1);
 
             this.registry.inc(GameDataKeys.PLAYER_SCORE, 1);
+            this.registry.inc(GameDataKeys.PLAYER_COINS, 1);
         });
 
         this.physics.add.overlap(this.player, this.enemiesBullets, (player, bullet) => {

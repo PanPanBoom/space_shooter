@@ -3,6 +3,8 @@ import { WeaponComponent } from "../components/WeaponComponent";
 import { Physics, Scene, Types } from "phaser";
 import { MovementComponent } from "../components/MovementComponent";
 import { HealthComponent } from "../components/HealthComponent";
+import { Bullet } from "./Bullet";
+import { GroupUtils } from "../utils/GroupUtils";
 
 export class Player extends Entity
 {
@@ -10,15 +12,14 @@ export class Player extends Entity
     private playerShipData: PlayerShipData;
     private lastShotTime: number;
     private cursorKeys: Types.Input.Keyboard.CursorKeys;
-    private coinsAmount: number;
+    private bullets: Physics.Arcade.Group;
 
-    public constructor(scene: Scene, x: number, y: number, texture: string, frame: string, bullets: Physics.Arcade.Group)
+    public constructor(scene: Scene, x: number, y: number, texture: string, frame: string, bullets?: Physics.Arcade.Group)
     {
         super(scene, x, y, texture, frame);
 
         this.rateOfFire = 0.5;
         this.lastShotTime = 0;
-        this.coinsAmount = 0;
 
         if(this.scene.input.keyboard)
         {
@@ -29,7 +30,17 @@ export class Player extends Entity
         else
             console.error("No keyboard input");
 
-        this.addComponent(new WeaponComponent(bullets, scene.sound.add("sfx_laser1"), 4, 12, 0xffe066, 1024));
+        this.bullets = scene.physics.add.group({
+            classType: Bullet,
+            runChildUpdate: true,
+            createCallback: (bullet) => {
+                (bullet as Bullet).init();
+            },
+            maxSize: 1024
+        });
+        GroupUtils.preallocateGroup(this.bullets, 5);
+
+        this.addComponent(new WeaponComponent(this.bullets, scene.sound.add("sfx_laser1"), 4, 12, 0xffe066, 1024));
         this.addComponent(new MovementComponent());
         this.addComponent(new HealthComponent(3));
 
@@ -39,6 +50,8 @@ export class Player extends Entity
 
         this.setAngle(-90);
     }
+
+    // public init(bullets: Physics.Arcade.Group)
 
     private createAnimation(shipId: number)
     {
@@ -102,8 +115,8 @@ export class Player extends Entity
         this.x = Phaser.Math.Clamp(this.x, this.displayWidth / 2, this.scene.cameras.main.width - this.displayWidth / 2);
     }
 
-    public getCoinsAmount()
+    public getBullets(): Physics.Arcade.Group
     {
-        return this.coinsAmount;
+        return this.bullets;
     }
 }
