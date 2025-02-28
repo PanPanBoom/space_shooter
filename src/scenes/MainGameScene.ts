@@ -122,7 +122,7 @@ export class MainGameScene extends BaseScene
         this.registry.inc(GameDataKeys.ROUND_NUMBER, 1);
 
         if(this.input.keyboard)
-            this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE).on('down', () => this.scene.start(SceneNames.MAIN_GAME_SCENE));
+            this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE).on('down', () => this.scene.start(this.registry.get(GameDataKeys.ROUND_NUMBER) % 4 == 0 ? SceneNames.SHOP_SCENE : SceneNames.MAIN_GAME_SCENE));
         else
             console.error("No keyboard input");
     }
