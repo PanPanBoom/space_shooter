@@ -94,8 +94,6 @@ export class MainGameScene extends BaseScene
 
             playerState.incScore(1);
             playerState.incCoins(1);
-            // this.registry.inc(GameDataKeys.PLAYER_SCORE, 1);
-            // this.registry.inc(GameDataKeys.PLAYER_COINS, 1);
         });
 
         this.physics.add.overlap(this.player, this.enemiesBullets, (player, bullet) => {

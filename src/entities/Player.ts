@@ -54,6 +54,7 @@ export class Player extends Entity
         this.setAngle(-90);
 
         playerState.getItems().forEach((item: Item) => item.apply(this));
+        playerState.clearItems();
     }
 
     // public init(bullets: Physics.Arcade.Group)

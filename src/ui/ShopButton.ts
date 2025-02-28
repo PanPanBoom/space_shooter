@@ -47,6 +47,11 @@ export class ShopButton extends GameObjects.Image
         // this.descriptionBox.setVisible(hover);
     }
 
+    public getItem()
+    {
+        return this.item;
+    }
+
     // public preUpdate()
     // {
     //     if(this.hover)

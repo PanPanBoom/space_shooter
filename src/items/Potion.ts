@@ -7,7 +7,7 @@ export class Potion extends Item
 {
     constructor(scene: Scene, x: number, y: number)
     {
-        super(scene, x, y, "sprites", "flask_full.png");
+        super(scene, x, y, "sprites", "flask_full.png", 3);
     }
 
     public apply(player: Player): void
