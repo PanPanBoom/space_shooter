@@ -27,8 +27,8 @@ export class Player extends Entity
         if(this.scene.input.keyboard)
         {
             this.cursorKeys = this.scene.input.keyboard.createCursorKeys();
-            this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE).on('down', () => this.selectShip(1));
-            this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO).on('down', () => this.selectShip(2));
+            // this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE).on('down', () => this.selectShip(1));
+            // this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO).on('down', () => this.selectShip(2));
         }
         else
             console.error("No keyboard input");
@@ -57,8 +57,6 @@ export class Player extends Entity
         playerState.clearItems();
     }
 
-    // public init(bullets: Physics.Arcade.Group)
-
     private createAnimation(shipId: number)
     {
         this.anims.create({
@@ -82,7 +80,7 @@ export class Player extends Entity
         });
     }
 
-    private selectShip(shipId: number)
+    public selectShip(shipId: number)
     {
         const playerShipsData = this.scene.cache.json.get("playerShips") as PlayerShipsData;
         this.playerShipData = playerShipsData[shipId];

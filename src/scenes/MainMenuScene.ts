@@ -111,6 +111,6 @@ export class MainMenuScene extends BaseScene
         this.registry.set(GameDataKeys.PLAYER_STATE, new PlayerState());
         this.registry.set(GameDataKeys.ROUND_NUMBER, 1);
 
-        this.scene.start(SceneNames.SHOP_SCENE);
+        this.scene.start(SceneNames.MAIN_GAME_SCENE);
     }
 }

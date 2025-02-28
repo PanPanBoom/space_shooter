@@ -13,7 +13,7 @@ export class PlayerState extends Events.EventEmitter
     {
         super();
 
-        this.coins = 5;
+        this.coins = 0;
         this.score = 0;
         this.items = [];
         this.health = new HealthComponent(3);
