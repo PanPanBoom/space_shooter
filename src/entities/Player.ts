@@ -2,7 +2,6 @@ import { Entity } from "./Entity";
 import { WeaponComponent } from "../components/WeaponComponent";
 import { Physics, Scene, Types } from "phaser";
 import { MovementComponent } from "../components/MovementComponent";
-import { HealthComponent } from "../components/HealthComponent";
 import { Bullet } from "./Bullet";
 import { GroupUtils } from "../utils/GroupUtils";
 import { GameDataKeys } from "../GameDataKey";
@@ -16,7 +15,7 @@ export class Player extends Entity
     private cursorKeys: Types.Input.Keyboard.CursorKeys;
     private bullets: Physics.Arcade.Group;
 
-    public constructor(scene: Scene, x: number, y: number, texture: string, frame: string, bullets?: Physics.Arcade.Group)
+    public constructor(scene: Scene, x: number, y: number, texture: string, frame: string)
     {
         super(scene, x, y, texture, frame);
 
