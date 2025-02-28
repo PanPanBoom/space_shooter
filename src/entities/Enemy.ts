@@ -66,7 +66,7 @@ export class Enemy extends Entity
         this.shootTimer.paused = true;
     }
 
-    public update(delta: number)
+    public update(time:number, delta: number)
     {
         const health = this.getComponent(HealthComponent);
         if(this.y >= this.scene.cameras.main.height + this.displayHeight)
@@ -75,6 +75,7 @@ export class Enemy extends Entity
             this.emit('outscreen');
         }
 
+        console.log(this.y);
         this.getComponent(MovementComponent)?.moveVertically(this, delta);
     }
 }
