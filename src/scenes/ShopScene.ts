@@ -3,7 +3,6 @@ import { BaseScene } from "./BaseScene";
 import { ShopButton } from "../ui/ShopButton";
 import { Item } from "../items/Item";
 import { GameDataKeys } from "../GameDataKey";
-import { Game } from "phaser";
 
 export class ShopScene extends BaseScene
 {
@@ -32,6 +31,6 @@ export class ShopScene extends BaseScene
             }
 
             else
-                console.log("trop pauvre loser");
+                console.log("not enough coins");
     }
 }
