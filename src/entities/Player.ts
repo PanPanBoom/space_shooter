@@ -6,6 +6,7 @@ import { HealthComponent } from "../components/HealthComponent";
 import { Bullet } from "./Bullet";
 import { GroupUtils } from "../utils/GroupUtils";
 import { GameDataKeys } from "../GameDataKey";
+import { Item } from "../items/Item";
 
 export class Player extends Entity
 {
@@ -18,6 +19,8 @@ export class Player extends Entity
     public constructor(scene: Scene, x: number, y: number, texture: string, frame: string, bullets?: Physics.Arcade.Group)
     {
         super(scene, x, y, texture, frame);
+
+        const playerState = this.scene.registry.get(GameDataKeys.PLAYER_STATE);
 
         this.rateOfFire = 0.5;
         this.lastShotTime = 0;
@@ -43,13 +46,15 @@ export class Player extends Entity
 
         this.addComponent(new WeaponComponent(this.bullets, scene.sound.add("sfx_laser1"), 4, 12, 0xffe066, 1024));
         this.addComponent(new MovementComponent());
-        this.addComponent(new HealthComponent(this.scene.registry.get(GameDataKeys.PLAYER_LIFE)));
+        this.addComponent(playerState.getHealth());
 
         const defaultShip: number = 1;
 
         this.selectShip(defaultShip);
 
         this.setAngle(-90);
+
+        playerState.getItems().forEach((item: Item) => item.apply(this));
     }
 
     // public init(bullets: Physics.Arcade.Group)

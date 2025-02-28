@@ -36,7 +36,7 @@ export class ShopButton extends GameObjects.Image
 
         this.on('pointerdown', (pointer: Input.Pointer) => {
             if(this.getBounds().contains(pointer.x, pointer. y))
-                console.log("click click pan pan pan");
+                this.emit("click", this.item);
         })
     }
 

@@ -4,6 +4,7 @@ import { GameDataKeys } from "../GameDataKey";
 import { BaseScene } from "./BaseScene";
 import { Player } from "../entities/Player";
 import { MainGameScene } from "./MainGameScene";
+import { PlayerState } from "../states/PlayerState";
 
 export class MainMenuScene extends BaseScene
 {
@@ -118,9 +119,7 @@ export class MainMenuScene extends BaseScene
 
     private launchGame()
     {
-        this.registry.set(GameDataKeys.PLAYER_SCORE, 0);
-        this.registry.set(GameDataKeys.PLAYER_COINS, 0);
-        this.registry.set(GameDataKeys.PLAYER_LIFE, 3);
+        this.registry.set(GameDataKeys.PLAYER_STATE, new PlayerState());
 
         this.scene.start(SceneNames.SHOP_SCENE, {
             round: 1

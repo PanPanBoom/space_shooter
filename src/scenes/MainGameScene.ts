@@ -9,7 +9,7 @@ import { HealthComponent } from '../components/HealthComponent';
 import { UserInterfaceScene } from './UserInterfaceScene';
 import { RoundInitData } from '../gameData/RoundInitData';
 import { BaseScene } from './BaseScene';
-import { Potion } from '../items/Potion';
+import { PlayerState } from '../states/PlayerState';
 
 export class MainGameScene extends BaseScene
 {
@@ -89,16 +89,19 @@ export class MainGameScene extends BaseScene
 
     private initCollisions()
     {
+        const playerState = this.registry.get(GameDataKeys.PLAYER_STATE);
+
         this.physics.add.collider(this.player.getBullets(), this.enemies, (bullet, enemy) => {
             (bullet as Bullet).disable();
             (enemy as Enemy).getComponent(HealthComponent)?.inc(-1);
 
-            this.registry.inc(GameDataKeys.PLAYER_SCORE, 1);
-            this.registry.inc(GameDataKeys.PLAYER_COINS, 1);
+            playerState.incScore(1);
+            playerState.incCoins(1);
+            // this.registry.inc(GameDataKeys.PLAYER_SCORE, 1);
+            // this.registry.inc(GameDataKeys.PLAYER_COINS, 1);
         });
 
         this.physics.add.overlap(this.player, this.enemiesBullets, (player, bullet) => {
-            this.registry.inc(GameDataKeys.PLAYER_LIFE, -1);
             (player as Player).getComponent(HealthComponent)?.inc(-1);
             (bullet as Bullet).disable();
         });

@@ -21,6 +21,8 @@ export class UserInterfaceScene extends Scene
 
     create(data: UserInterfaceData)
     {
+        const playerState = this.registry.get(GameDataKeys.PLAYER_STATE);
+        
         const offset = 16;
         this.generalTextStyle = {
             fontFamily: 'future',
@@ -33,9 +35,9 @@ export class UserInterfaceScene extends Scene
         };
 
         const scoreText = this.add.text(this.cameras.main.width - offset, offset, "SCORE", textStyle).setOrigin(1, 0);
-        this.playerScoreText = this.add.text(scoreText.x - scoreText.displayWidth / 2, offset + scoreText.displayHeight, this.registry.get(GameDataKeys.PLAYER_SCORE), textStyle).setOrigin(0.5, 0);
+        this.playerScoreText = this.add.text(scoreText.x - scoreText.displayWidth / 2, offset + scoreText.displayHeight, playerState.getScore(), textStyle).setOrigin(0.5, 0);
 
-        this.registry.events.on("changedata-" + GameDataKeys.PLAYER_SCORE, (_: any, value: number) => this.playerScoreText.setText(value.toString()));
+        playerState.on("change-score", (value: number) => this.playerScoreText.setText(value.toString()));
 
         this.enemiesLeftCounter = data.enemiesLeft;
         const skullImage = this.add.image(offset, offset, "sprites", "skull.png").setOrigin(0);
@@ -53,8 +55,9 @@ export class UserInterfaceScene extends Scene
         playerHealth?.on('change', () => this.playerLivesText.setText(playerHealth.getValue().toString()));
     
         const coinImage = this.add.image(shieldImage.x, shieldImage.y - shieldImage.displayHeight - offset, "sprites", "tokens.png").setOrigin(1);
-        this.playerCoinsText = this.add.text(this.playerLivesText.x, coinImage.y, this.registry.get(GameDataKeys.PLAYER_COINS).toString(), textStyle).setOrigin(1);
-        this.registry.events.on("changedata-" + GameDataKeys.PLAYER_COINS, (_: any, value: number) => this.playerCoinsText.setText(value.toString()));
+        this.playerCoinsText = this.add.text(this.playerLivesText.x, coinImage.y, playerState.getCoins().toString(), textStyle).setOrigin(1);
+        
+        playerState.on("change-coins", (value: number) => this.playerCoinsText.setText(value.toString()));
 
         this.launchRoundBeginText(data.round);
     }
