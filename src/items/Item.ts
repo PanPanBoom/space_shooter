@@ -6,4 +6,5 @@ export abstract class Item extends GameObjects.Image
     private price: number;
 
     public abstract apply(player: Player): void;
+    public abstract getDescription(): string;
 }

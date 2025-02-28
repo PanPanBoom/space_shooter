@@ -14,4 +14,8 @@ export class Potion extends Item
     {
         player.getComponent(HealthComponent)?.inc(1);
     }
+
+    public getDescription(): string {
+        return "Add 1 life to the player";
+    }
 }
