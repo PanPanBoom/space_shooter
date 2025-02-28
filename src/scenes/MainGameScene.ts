@@ -6,7 +6,6 @@ import { Enemy } from '../entities/Enemy';
 import { GameDataKeys } from '../GameDataKey';
 import { SceneNames } from './SceneNames';
 import { HealthComponent } from '../components/HealthComponent';
-import { UserInterfaceScene } from './UserInterfaceScene';
 import { BaseScene } from './BaseScene';
 
 export class MainGameScene extends BaseScene
@@ -29,7 +28,7 @@ export class MainGameScene extends BaseScene
     create ()
     {
         super.create();
-        const colorPalette: string[] = ["8A95A5", "3A1772", "9990D35", "F2CD5D", "61E86"];
+        // const colorPalette: string[] = ["8A95A5", "3A1772", "9990D35", "F2CD5D", "61E86"];
         this.cameras.main.setBackgroundColor(0x50514f);
 
         this.planet = this.add.image(0, -512, 'planet').setOrigin(0);
@@ -136,7 +135,7 @@ export class MainGameScene extends BaseScene
             return;
 
         const enemy = this.enemies.get() as Enemy;
-        enemy.enable(Phaser.Math.Between(0, this.cameras.main.width), 0, "sprites", "enemy.png", (this.scene.get(SceneNames.USER_INTERFACE_SCENE) as UserInterfaceScene));
+        enemy.enable(Phaser.Math.Between(0, this.cameras.main.width), 0, "sprites", "enemy.png");
         this.enemiesCount++;
     }
 

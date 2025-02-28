@@ -1,9 +1,7 @@
-import { Game, GameObjects, Physics, Scene, Types } from "phaser";
+import { GameObjects, Types } from "phaser";
 import { SceneNames } from "./SceneNames";
 import { GameDataKeys } from "../GameDataKey";
 import { BaseScene } from "./BaseScene";
-import { Player } from "../entities/Player";
-import { MainGameScene } from "./MainGameScene";
 import { PlayerState } from "../states/PlayerState";
 
 export class MainMenuScene extends BaseScene

@@ -1,4 +1,4 @@
-import { GameObjects, Scene } from "phaser";
+import { GameObjects } from "phaser";
 import { Player } from "../entities/Player";
 
 export abstract class Item extends GameObjects.Image
