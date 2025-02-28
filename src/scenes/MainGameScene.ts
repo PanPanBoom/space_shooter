@@ -7,9 +7,7 @@ import { GameDataKeys } from '../GameDataKey';
 import { SceneNames } from './SceneNames';
 import { HealthComponent } from '../components/HealthComponent';
 import { UserInterfaceScene } from './UserInterfaceScene';
-import { RoundInitData } from '../gameData/RoundInitData';
 import { BaseScene } from './BaseScene';
-import { PlayerState } from '../states/PlayerState';
 
 export class MainGameScene extends BaseScene
 {
@@ -28,7 +26,7 @@ export class MainGameScene extends BaseScene
         super(SceneNames.MAIN_GAME_SCENE);
     }
 
-    create (data: RoundInitData)
+    create ()
     {
         super.create();
         const colorPalette: string[] = ["8A95A5", "3A1772", "9990D35", "F2CD5D", "61E86"];
@@ -36,7 +34,7 @@ export class MainGameScene extends BaseScene
 
         this.planet = this.add.image(0, -512, 'planet').setOrigin(0);
 
-        this.roundNumber = data.round;
+        this.roundNumber = this.registry.get(GameDataKeys.ROUND_NUMBER);
 
         this.enemiesBullets = this.physics.add.group({
             classType: Bullet,
@@ -71,7 +69,7 @@ export class MainGameScene extends BaseScene
         GroupUtils.preallocateGroup(this.enemies, 5);
 
         this.enemiesCount = 0;
-        this.enemiesMax = parseInt((data.round * 2).toFixed(0));
+        this.enemiesMax = parseInt((this.roundNumber * 2).toFixed(0));
         this.enemiesLeft = this.enemiesMax;
 
         this.initCollisions();
@@ -83,7 +81,7 @@ export class MainGameScene extends BaseScene
             loop: true
         });
 
-        this.scene.launch(SceneNames.USER_INTERFACE_SCENE, {round: this.roundNumber, enemiesLeft: this.enemiesLeft, enemies: this.enemies, player: this.player});
+        this.scene.launch(SceneNames.USER_INTERFACE_SCENE, {enemiesLeft: this.enemiesLeft, enemies: this.enemies, player: this.player});
         this.isRoundCleared = false;
     }
 
@@ -124,9 +122,10 @@ export class MainGameScene extends BaseScene
         this.isRoundCleared = true;
         this.enemies.emit('dead');
         this.player.roundCleared();
+        this.registry.inc(GameDataKeys.ROUND_NUMBER, 1);
 
         if(this.input.keyboard)
-            this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE).on('down', () => this.scene.start(SceneNames.MAIN_GAME_SCENE, {round: this.roundNumber + 1}));
+            this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE).on('down', () => this.scene.start(SceneNames.MAIN_GAME_SCENE));
         else
             console.error("No keyboard input");
     }

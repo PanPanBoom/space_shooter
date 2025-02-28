@@ -19,8 +19,9 @@ export class GameOverScene extends Scene
         this.add.text(400, 800, 'Press SPACE to play again', {fontSize: '32px', color: 'white'}).setOrigin(0.5);
 
         this.input.keyboard?.once('keydown-SPACE', () => {
-            this.registry.set<number>(GameDataKeys.PLAYER_STATE, new PlayerState());
-            this.scene.start(SceneNames.MAIN_GAME_SCENE, {round: 1});
+            this.registry.set<PlayerState>(GameDataKeys.PLAYER_STATE, new PlayerState());
+            this.registry.set<number>(GameDataKeys.ROUND_NUMBER, 1);
+            this.scene.start(SceneNames.MAIN_GAME_SCENE);
         })
     }
 }

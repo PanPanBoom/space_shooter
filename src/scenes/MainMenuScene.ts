@@ -120,9 +120,8 @@ export class MainMenuScene extends BaseScene
     private launchGame()
     {
         this.registry.set(GameDataKeys.PLAYER_STATE, new PlayerState());
+        this.registry.set(GameDataKeys.ROUND_NUMBER, 1);
 
-        this.scene.start(SceneNames.SHOP_SCENE, {
-            round: 1
-        });
+        this.scene.start(SceneNames.MAIN_GAME_SCENE);
     }
 }

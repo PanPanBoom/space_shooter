@@ -59,7 +59,7 @@ export class UserInterfaceScene extends Scene
         
         playerState.on("change-coins", (value: number) => this.playerCoinsText.setText(value.toString()));
 
-        this.launchRoundBeginText(data.round);
+        this.launchRoundBeginText(this.registry.get(GameDataKeys.ROUND_NUMBER));
     }
 
     private launchRoundBeginText(round: number)
