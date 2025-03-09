@@ -10,6 +10,7 @@ export class PlayerState extends Events.EventEmitter
     private health: HealthComponent;
     private ships: number[];
     private bulletSpeed: number;
+    private fireRate: number;
 
     constructor()
     {
@@ -21,6 +22,7 @@ export class PlayerState extends Events.EventEmitter
         this.health = new HealthComponent(3);
         this.ships = [1];
         this.bulletSpeed = 1024;
+        this.fireRate = 0.5;
     }
 
     public getCoins(): number
@@ -83,5 +85,15 @@ export class PlayerState extends Events.EventEmitter
     public getBulletSpeed(): number
     {
         return this.bulletSpeed;
+    }
+
+    public increaseFireRate(multiplier: number)
+    {
+        this.fireRate *= multiplier;
+    }
+
+    public getFireRate(): number
+    {
+        return this.fireRate;
     }
 }

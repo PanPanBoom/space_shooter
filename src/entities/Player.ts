@@ -24,7 +24,7 @@ export class Player extends Entity
         playerState.getItems().forEach((item: Item) => item.apply(this));
         playerState.clearItems();
 
-        this.rateOfFire = 0.5;
+        this.rateOfFire = playerState.getFireRate();
         this.lastShotTime = 0;
 
         this.bullets = scene.physics.add.group({

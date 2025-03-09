@@ -3,13 +3,14 @@ import { Item } from "../items/Item";
 import { Potion } from "../items/Potion";
 import { NewShip } from "../items/NewShip";
 import { IncreaseBulletSpeed } from "../items/IncreaseBulletSpeed";
-// import { ItemDescriptionBox } from "./ItemDescriptionBox";
+import { IncreaseFireRate } from "../items/IncreaseFireRate";
+import { ItemDescriptionBox } from "./ItemDescriptionBox";
 
 export class ShopButton extends GameObjects.Container
 {
     private bg: GameObjects.Image;
     private item: Item;
-    // private descriptionBox: ItemDescriptionBox;
+    private descriptionBox: ItemDescriptionBox;
     private hover: boolean;
 
     constructor(scene: Scene, x: number, y: number)
@@ -40,8 +41,8 @@ export class ShopButton extends GameObjects.Container
         this.hover = false;
         this.setScale(2);
 
-        // this.descriptionBox = new ItemDescriptionBox(this.scene, 0, 0, this.item.getDescription()).setVisible(false);
-        // this.scene.add.existing(this.descriptionBox);
+        this.descriptionBox = new ItemDescriptionBox(this.scene, 0, 0, this.item.getDescription()).setVisible(false);
+        this.scene.add.existing(this.descriptionBox);
 
         this.bg.on('pointerover', () => this.hoverBehavior(true));
         
@@ -55,7 +56,7 @@ export class ShopButton extends GameObjects.Container
 
     private selectRandomItem(x: number, y: number): Item
     {
-        const items = [new Potion(this.scene, x, y), new NewShip(this.scene, x, y, 2), new IncreaseBulletSpeed(this.scene, x, y)];
+        const items = [new Potion(this.scene, x, y), new NewShip(this.scene, x, y, 2), new IncreaseBulletSpeed(this.scene, x, y), new IncreaseFireRate(this.scene, x , y)];
 
         return items[Math.Between(0, items.length - 1)];
     }
@@ -64,7 +65,7 @@ export class ShopButton extends GameObjects.Container
     {
         this.hover = hover;
         this.bg.setTint(this.hover ? 0x999999 : 0xffffff);
-        // this.descriptionBox.setVisible(hover);
+        this.descriptionBox.setVisible(hover);
     }
 
     public getItem()
@@ -72,9 +73,9 @@ export class ShopButton extends GameObjects.Container
         return this.item;
     }
 
-    // public preUpdate()
-    // {
-    //     if(this.hover)
-    //         this.descriptionBox.setPosition(Phaser.Math.Clamp(this.scene.input.x, 0, this.scene.cameras.main.width - this.descriptionBox.displayWidth), this.scene.input.y);
-    // }
+    public preUpdate()
+    {
+        if(this.hover)
+            this.descriptionBox.setPosition(Phaser.Math.Clamp(this.scene.input.x, 0, this.scene.cameras.main.width - this.descriptionBox.displayWidth), this.scene.input.y);
+    }
 }
