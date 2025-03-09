@@ -19,6 +19,7 @@ export class MainGameScene extends BaseScene
     private enemiesLeft: number;
     private roundNumber: number;
     private isRoundCleared: boolean;
+    private shopFinished: boolean;
 
     constructor ()
     {
@@ -82,6 +83,7 @@ export class MainGameScene extends BaseScene
 
         this.scene.launch(SceneNames.USER_INTERFACE_SCENE, {enemiesLeft: this.enemiesLeft, enemies: this.enemies, player: this.player});
         this.isRoundCleared = false;
+        this.shopFinished = false;
     }
 
     private initCollisions()
@@ -122,9 +124,20 @@ export class MainGameScene extends BaseScene
         this.registry.inc(GameDataKeys.ROUND_NUMBER, 1);
 
         if(this.input.keyboard)
-            this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE).on('down', () => this.scene.start(this.registry.get(GameDataKeys.ROUND_NUMBER) % 4 == 0 ? SceneNames.SHOP_SCENE : SceneNames.MAIN_GAME_SCENE));
+            this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE).on('down', () => this.launchNextScreen());
         else
             console.error("No keyboard input");
+    }
+
+    private launchNextScreen()
+    {
+        if(this.registry.get(GameDataKeys.ROUND_NUMBER) % 4 == 0 && !this.shopFinished)
+        {
+            this.scene.launch(SceneNames.SHOP_SCENE);
+            this.shopFinished = true;
+        }
+        else
+            this.scene.start(SceneNames.MAIN_GAME_SCENE);
     }
 
     private spawnEnemy()

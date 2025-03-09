@@ -1,5 +1,6 @@
 import { Scene } from "phaser";
 import { Item } from "./Item";
+import { GameDataKeys } from "../GameDataKey";
 import { Player } from "../entities/Player";
 
 export class NewShip extends Item
@@ -12,7 +13,7 @@ export class NewShip extends Item
     }
 
     public apply(player: Player): void {
-        player.selectShip(this.shipId);
+        player.scene.registry.get(GameDataKeys.PLAYER_STATE).addShip(this.shipId);
     }
 
     public getDescription(): string {

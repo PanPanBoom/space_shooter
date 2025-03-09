@@ -75,7 +75,6 @@ export class Enemy extends Entity
             this.emit('outscreen');
         }
 
-        console.log(this.y);
         this.getComponent(MovementComponent)?.moveVertically(this, delta);
     }
 }

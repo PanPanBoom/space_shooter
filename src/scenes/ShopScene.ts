@@ -1,11 +1,10 @@
 import { SceneNames } from "./SceneNames";
-import { BaseScene } from "./BaseScene";
 import { ShopButton } from "../ui/ShopButton";
 import { Item } from "../items/Item";
 import { GameDataKeys } from "../GameDataKey";
-import { Actions } from "phaser";
+import { Actions, Scene } from "phaser";
 
-export class ShopScene extends BaseScene
+export class ShopScene extends Scene
 {
     constructor()
     {
@@ -14,8 +13,6 @@ export class ShopScene extends BaseScene
 
     create()
     {
-        super.create();
-
         const buttons = [];
         for(let i = 0; i < 3; i++)
         {
@@ -44,7 +41,7 @@ export class ShopScene extends BaseScene
             {
                 playerState.addItem(item);
                 playerState.incCoins(-item.getPrice());
-                this.scene.start(SceneNames.MAIN_GAME_SCENE);
+                this.scene.stop(this);
             }
 
             else

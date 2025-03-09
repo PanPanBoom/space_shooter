@@ -8,6 +8,7 @@ export class PlayerState extends Events.EventEmitter
     private score: number;
     private items: Item[];
     private health: HealthComponent;
+    private ships: number[];
 
     constructor()
     {
@@ -17,6 +18,7 @@ export class PlayerState extends Events.EventEmitter
         this.score = 0;
         this.items = [];
         this.health = new HealthComponent(3);
+        this.ships = [1];
     }
 
     public getCoins(): number
@@ -59,5 +61,15 @@ export class PlayerState extends Events.EventEmitter
     public getHealth(): HealthComponent
     {
         return this.health
+    }
+
+    public addShip(shipId: number)
+    {
+        this.ships.push(shipId);
+    }
+
+    public getShips(): number[]
+    {
+        return this.ships;
     }
 }

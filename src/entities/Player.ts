@@ -24,15 +24,6 @@ export class Player extends Entity
         this.rateOfFire = 0.5;
         this.lastShotTime = 0;
 
-        if(this.scene.input.keyboard)
-        {
-            this.cursorKeys = this.scene.input.keyboard.createCursorKeys();
-            // this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE).on('down', () => this.selectShip(1));
-            // this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO).on('down', () => this.selectShip(2));
-        }
-        else
-            console.error("No keyboard input");
-
         this.bullets = scene.physics.add.group({
             classType: Bullet,
             runChildUpdate: true,
@@ -54,7 +45,25 @@ export class Player extends Entity
         this.setAngle(-90);
 
         playerState.getItems().forEach((item: Item) => item.apply(this));
+
+        if(this.scene.input.keyboard)
+        {
+            this.cursorKeys = this.scene.input.keyboard.createCursorKeys();
+            playerState.getShips().forEach((shipId: number) => this.initShipKeyBinds(shipId));
+            // this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE).on('down', () => this.selectShip(1));
+            // this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO).on('down', () => this.selectShip(2));
+        }
+        else
+            console.error("No keyboard input");
+
         playerState.clearItems();
+    }
+
+    private initShipKeyBinds(shipId: number)
+    {
+        const offsetKey = 48;
+        if(this.scene.input.keyboard)
+            this.scene.input.keyboard.addKey(offsetKey + shipId).on('down', () => this.selectShip(shipId));
     }
 
     private createAnimation(shipId: number)
@@ -72,6 +81,7 @@ export class Player extends Entity
 
     public roundCleared()
     {
+        this.removeComponents(MovementComponent);
         this.scene.tweens.add({
             targets: this,
             y: -this.displayHeight,
