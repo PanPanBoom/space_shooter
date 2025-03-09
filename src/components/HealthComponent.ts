@@ -25,11 +25,15 @@ export class HealthComponent extends Events.EventEmitter implements IComponent
 
     public inc(amount: number): void
     {
-        this.value += amount;
+        const oldValue = this.value;
 
-        this.emit('change', this.value);
+        if(this.value + amount <= this.max)
+            this.value += amount;
 
         if(this.value <= 0)
             this.emit('death');
+
+        if(oldValue != this.value)
+            this.emit('change', this.value);
     }
 }

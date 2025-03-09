@@ -1,0 +1,62 @@
+import { SceneNames } from "./SceneNames";
+import { ShopButton } from "../ui/ShopButton";
+import { Item } from "../items/Item";
+import { GameDataKeys } from "../GameDataKey";
+import { Actions, Scene } from "phaser";
+
+export class ShopScene extends Scene
+{
+    constructor()
+    {
+        super(SceneNames.SHOP_SCENE);
+    }
+
+    create()
+    {
+        this.cameras.main.setBackgroundColor('rgba(0, 0, 0, 120)');
+
+        const buttons = [];
+        for(let i = 0; i < 3; i++)
+        {
+            buttons.push(new ShopButton(this, 0, 0));
+            buttons[buttons.length - 1].on('click', (item: Item) => this.buyItem(item));
+        }
+
+        Actions.GridAlign(buttons, {
+                width: 3,
+                height: 1,
+                cellWidth: this.cameras.main.width / 3,
+                cellHeight: this.cameras.main.height,
+                x: 0,
+                y: this.cameras.main.centerY - 200
+
+        })
+
+        this.add.text(this.cameras.main.width / 2, this.cameras.main.height - 50, "Press Space to skip", {
+            fontFamily: 'future',
+            align: 'center',
+            fontSize: '30px'
+        }).setOrigin(0.5);
+
+        this.input.keyboard?.once('keydown-SPACE', () => {
+            this.scene.stop();
+        });
+        // const button = new ShopButton(this, 100, 100);
+
+        // button.on('click', (item: Item) => this.buyItem(item));
+    }
+
+    private buyItem(item: Item)
+    {
+        const playerState = this.registry.get(GameDataKeys.PLAYER_STATE);
+            if(playerState.getCoins() > item.getPrice())
+            {
+                playerState.addItem(item);
+                playerState.incCoins(-item.getPrice());
+                this.scene.stop(this);
+            }
+
+            else
+                console.log("not enough coins");
+    }
+}

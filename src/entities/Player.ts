@@ -2,7 +2,10 @@ import { Entity } from "./Entity";
 import { WeaponComponent } from "../components/WeaponComponent";
 import { Physics, Scene, Types } from "phaser";
 import { MovementComponent } from "../components/MovementComponent";
-import { HealthComponent } from "../components/HealthComponent";
+import { Bullet } from "./Bullet";
+import { GroupUtils } from "../utils/GroupUtils";
+import { GameDataKeys } from "../GameDataKey";
+import { Item } from "../items/Item";
 
 export class Player extends Entity
 {
@@ -10,32 +13,56 @@ export class Player extends Entity
     private playerShipData: PlayerShipData;
     private lastShotTime: number;
     private cursorKeys: Types.Input.Keyboard.CursorKeys;
+    private bullets: Physics.Arcade.Group;
 
-    public constructor(scene: Scene, x: number, y: number, texture: string, frame: string, bullets: Physics.Arcade.Group)
+    public constructor(scene: Scene, x: number, y: number, texture: string, frame: string)
     {
         super(scene, x, y, texture, frame);
 
-        this.rateOfFire = 0.5;
+        const playerState = this.scene.registry.get(GameDataKeys.PLAYER_STATE);
+
+        playerState.getItems().forEach((item: Item) => item.apply(this));
+        playerState.clearItems();
+
+        this.rateOfFire = playerState.getFireRate();
         this.lastShotTime = 0;
 
-        if(this.scene.input.keyboard)
-        {
-            this.cursorKeys = this.scene.input.keyboard.createCursorKeys();
-            this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE).on('down', () => this.selectShip(1));
-            this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO).on('down', () => this.selectShip(2));
-        }
-        else
-            console.error("No keyboard input");
+        this.bullets = scene.physics.add.group({
+            classType: Bullet,
+            runChildUpdate: true,
+            createCallback: (bullet) => {
+                (bullet as Bullet).init();
+            },
+            maxSize: 1024
+        });
+        GroupUtils.preallocateGroup(this.bullets, 5);
 
-        this.addComponent(new WeaponComponent(bullets, scene.sound.add("sfx_laser1"), 4, 12, 0xffe066, 1024));
+        this.addComponent(new WeaponComponent(this.bullets, scene.sound.add("sfx_laser1"), 4, 12, 0xffe066, playerState.getBulletSpeed()));
         this.addComponent(new MovementComponent());
-        this.addComponent(new HealthComponent(3));
+        this.addComponent(playerState.getHealth());
 
         const defaultShip: number = 1;
 
         this.selectShip(defaultShip);
 
         this.setAngle(-90);
+
+        if(this.scene.input.keyboard)
+        {
+            this.cursorKeys = this.scene.input.keyboard.createCursorKeys();
+            playerState.getShips().forEach((shipId: number) => this.initShipKeyBinds(shipId));
+            // this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE).on('down', () => this.selectShip(1));
+            // this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO).on('down', () => this.selectShip(2));
+        }
+        else
+            console.error("No keyboard input");
+    }
+
+    private initShipKeyBinds(shipId: number)
+    {
+        const offsetKey = 48;
+        if(this.scene.input.keyboard)
+            this.scene.input.keyboard.addKey(offsetKey + shipId).on('down', () => this.selectShip(shipId));
     }
 
     private createAnimation(shipId: number)
@@ -53,6 +80,7 @@ export class Player extends Entity
 
     public roundCleared()
     {
+        this.removeComponents(MovementComponent);
         this.scene.tweens.add({
             targets: this,
             y: -this.displayHeight,
@@ -61,7 +89,7 @@ export class Player extends Entity
         });
     }
 
-    private selectShip(shipId: number)
+    public selectShip(shipId: number)
     {
         const playerShipsData = this.scene.cache.json.get("playerShips") as PlayerShipsData;
         this.playerShipData = playerShipsData[shipId];
@@ -98,5 +126,10 @@ export class Player extends Entity
         }
 
         this.x = Phaser.Math.Clamp(this.x, this.displayWidth / 2, this.scene.cameras.main.width - this.displayWidth / 2);
+    }
+
+    public getBullets(): Physics.Arcade.Group
+    {
+        return this.bullets;
     }
 }

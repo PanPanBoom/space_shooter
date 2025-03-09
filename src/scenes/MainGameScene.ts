@@ -1,4 +1,4 @@
-import { Game, GameObjects, Math, Physics, Scene } from 'phaser';
+import { Physics } from 'phaser';
 import { Bullet } from '../entities/Bullet';
 import { GroupUtils } from '../utils/GroupUtils';
 import { Player } from '../entities/Player';
@@ -6,53 +6,47 @@ import { Enemy } from '../entities/Enemy';
 import { GameDataKeys } from '../GameDataKey';
 import { SceneNames } from './SceneNames';
 import { HealthComponent } from '../components/HealthComponent';
-import { UserInterfaceScene } from './UserInterfaceScene';
-import { RoundInitData } from '../gameData/RoundInitData';
+import { BaseScene } from './BaseScene';
 
-export class MainGameScene extends Scene
+export class MainGameScene extends BaseScene
 {
     private player: Player;
-    private bullets: Physics.Arcade.Group;
     private enemies: Physics.Arcade.Group;
     private enemiesBullets: Physics.Arcade.Group;
-    private bg: Phaser.GameObjects.TileSprite;
     private planet: Phaser.GameObjects.Image;
     private enemiesCount: number;
     private enemiesMax: number;
     private enemiesLeft: number;
     private roundNumber: number;
     private isRoundCleared: boolean;
+    private shopFinished: boolean;
 
     constructor ()
     {
         super(SceneNames.MAIN_GAME_SCENE);
     }
 
-    create (data: RoundInitData)
+    create ()
     {
-        const colorPalette: string[] = ["8A95A5", "3A1772", "9990D35", "F2CD5D", "61E86"];
+        super.create();
+        // const colorPalette: string[] = ["8A95A5", "3A1772", "9990D35", "F2CD5D", "61E86"];
         this.cameras.main.setBackgroundColor(0x50514f);
 
-        this.bg = this.add.tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, "bg").setOrigin(0).setTileScale(2);
         this.planet = this.add.image(0, -512, 'planet').setOrigin(0);
 
-        this.roundNumber = data.round;
+        this.roundNumber = this.registry.get(GameDataKeys.ROUND_NUMBER);
 
-        const bulletConfig = {
+        this.enemiesBullets = this.physics.add.group({
             classType: Bullet,
             runChildUpdate: true,
             createCallback: (bullet) => {
                 (bullet as Bullet).init();
             },
             maxSize: 1024
-        };
-        this.bullets = this.physics.add.group(bulletConfig);
-        GroupUtils.preallocateGroup(this.bullets, 5);
-
-        this.enemiesBullets = this.physics.add.group(bulletConfig);
+        });
         GroupUtils.preallocateGroup(this.enemiesBullets, 5);
 
-        this.player = new Player(this, this.cameras.main.centerX, this.cameras.main.height + 200, 'sprites', 'ship1_frame1.png', this.bullets);
+        this.player = new Player(this, this.cameras.main.centerX, this.cameras.main.height + 200, 'sprites', 'ship1_frame1.png');
         this.add.existing(this.player);
         this.player.getComponent(HealthComponent)?.once('death', () => this.endGame());
 
@@ -75,7 +69,7 @@ export class MainGameScene extends Scene
         GroupUtils.preallocateGroup(this.enemies, 5);
 
         this.enemiesCount = 0;
-        this.enemiesMax = parseInt((data.round * 2).toFixed(0));
+        this.enemiesMax = parseInt((this.roundNumber * 2).toFixed(0));
         this.enemiesLeft = this.enemiesMax;
 
         this.initCollisions();
@@ -87,17 +81,21 @@ export class MainGameScene extends Scene
             loop: true
         });
 
-        this.scene.launch(SceneNames.USER_INTERFACE_SCENE, {round: this.roundNumber, enemiesLeft: this.enemiesLeft, enemies: this.enemies, player: this.player});
+        this.scene.launch(SceneNames.USER_INTERFACE_SCENE, {enemiesLeft: this.enemiesLeft, enemies: this.enemies, player: this.player});
         this.isRoundCleared = false;
+        this.shopFinished = false;
     }
 
     private initCollisions()
     {
-        this.physics.add.collider(this.bullets, this.enemies, (bullet, enemy) => {
+        const playerState = this.registry.get(GameDataKeys.PLAYER_STATE);
+
+        this.physics.add.collider(this.player.getBullets(), this.enemies, (bullet, enemy) => {
             (bullet as Bullet).disable();
             (enemy as Enemy).getComponent(HealthComponent)?.inc(-1);
 
-            this.registry.inc(GameDataKeys.PLAYER_SCORE, 1);
+            playerState.incScore(1);
+            playerState.incCoins(1);
         });
 
         this.physics.add.overlap(this.player, this.enemiesBullets, (player, bullet) => {
@@ -123,11 +121,23 @@ export class MainGameScene extends Scene
         this.isRoundCleared = true;
         this.enemies.emit('dead');
         this.player.roundCleared();
+        this.registry.inc(GameDataKeys.ROUND_NUMBER, 1);
 
         if(this.input.keyboard)
-            this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE).on('down', () => this.scene.start(SceneNames.MAIN_GAME_SCENE, {round: this.roundNumber + 1}));
+            this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE).on('down', () => this.launchNextScreen());
         else
             console.error("No keyboard input");
+    }
+
+    private launchNextScreen()
+    {
+        if(this.registry.get(GameDataKeys.ROUND_NUMBER) % 4 == 0 && !this.shopFinished)
+        {
+            this.scene.launch(SceneNames.SHOP_SCENE);
+            this.shopFinished = true;
+        }
+        else
+            this.scene.start(SceneNames.MAIN_GAME_SCENE);
     }
 
     private spawnEnemy()
@@ -136,13 +146,13 @@ export class MainGameScene extends Scene
             return;
 
         const enemy = this.enemies.get() as Enemy;
-        enemy.enable(Phaser.Math.Between(0, this.cameras.main.width), 0, "sprites", "enemy.png", (this.scene.get(SceneNames.USER_INTERFACE_SCENE) as UserInterfaceScene));
+        enemy.enable(Phaser.Math.Between(0, this.cameras.main.width), 0, "sprites", "enemy.png");
         this.enemiesCount++;
     }
 
     update(time: number, delta: number)
     {
-        this.bg.tilePositionY -= 0.1 * delta;
+        super.update(time, delta);
         this.planet.y += 0.4 * delta;
 
         if(this.enemies.countActive() == 0 && this.enemiesCount >= this.enemiesMax && !this.isRoundCleared)

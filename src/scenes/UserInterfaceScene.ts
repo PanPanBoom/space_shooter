@@ -7,11 +7,12 @@ import { UserInterfaceData } from "../gameData/RoundInitData";
 
 export class UserInterfaceScene extends Scene
 {
+    private generalTextStyle: Types.GameObjects.Text.TextStyle;
     private playerScoreText: GameObjects.Text;
     private enemiesLeftCounter: number;
     private enemiesLeftCounterText: GameObjects.Text;
     private playerLivesText: GameObjects.Text;
-    private generalTextStyle: Types.GameObjects.Text.TextStyle;
+    private playerCoinsText: GameObjects.Text;
 
     constructor()
     {
@@ -20,6 +21,8 @@ export class UserInterfaceScene extends Scene
 
     create(data: UserInterfaceData)
     {
+        const playerState = this.registry.get(GameDataKeys.PLAYER_STATE);
+        
         const offset = 16;
         this.generalTextStyle = {
             fontFamily: 'future',
@@ -32,11 +35,9 @@ export class UserInterfaceScene extends Scene
         };
 
         const scoreText = this.add.text(this.cameras.main.width - offset, offset, "SCORE", textStyle).setOrigin(1, 0);
-        this.playerScoreText = this.add.text(scoreText.x - scoreText.displayWidth / 2, offset + scoreText.displayHeight, this.registry.get(GameDataKeys.PLAYER_SCORE), textStyle).setOrigin(0.5, 0);
+        this.playerScoreText = this.add.text(scoreText.x - scoreText.displayWidth / 2, offset + scoreText.displayHeight, playerState.getScore(), textStyle).setOrigin(0.5, 0);
 
-        this.registry.events.on("changedata-" + GameDataKeys.PLAYER_SCORE, (_: any, value: number) => {
-            this.playerScoreText.setText(value.toString());
-        });
+        playerState.on("change-score", (value: number) => this.playerScoreText.setText(value.toString()));
 
         this.enemiesLeftCounter = data.enemiesLeft;
         const skullImage = this.add.image(offset, offset, "sprites", "skull.png").setOrigin(0);
@@ -53,7 +54,12 @@ export class UserInterfaceScene extends Scene
         this.playerLivesText = this.add.text(shieldImage.x - shieldImage.width, shieldImage.y - shieldImage.displayHeight / 2, playerHealth ? playerHealth?.getValue().toString() : "?", textStyle).setOrigin(1, 0.5);
         playerHealth?.on('change', () => this.playerLivesText.setText(playerHealth.getValue().toString()));
     
-        this.launchRoundBeginText(data.round);
+        const coinImage = this.add.image(shieldImage.x, shieldImage.y - shieldImage.displayHeight - offset, "sprites", "tokens.png").setOrigin(1);
+        this.playerCoinsText = this.add.text(this.playerLivesText.x, coinImage.y, playerState.getCoins().toString(), textStyle).setOrigin(1);
+        
+        playerState.on("change-coins", (value: number) => this.playerCoinsText.setText(value.toString()));
+
+        this.launchRoundBeginText(this.registry.get(GameDataKeys.ROUND_NUMBER));
     }
 
     private launchRoundBeginText(round: number)
@@ -82,7 +88,7 @@ export class UserInterfaceScene extends Scene
         const roundText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, "ROUND", {...this.generalTextStyle, fontSize: "128px"}).setOrigin(0.5);
         this.add.text(roundText.x, roundText.y + 64, "CLEARED", {...this.generalTextStyle, fontSize: "64px"}).setOrigin(0.5, 0);
 
-        const spaceKeyImage = this.add.image(this.cameras.main.centerX, this.cameras.main.height - 32, "sprites", "space.png").setScale(2).setOrigin(0.5, 1).setAlpha(0);
+        const spaceKeyImage = this.add.image(this.cameras.main.centerX, this.cameras.main.height - 32, "sprites", "space.png").setScale(2).setOrigin(0.5, 1).setAlpha(0.2);
         this.add.tween({
             targets: spaceKeyImage,
             alpha: 1,
