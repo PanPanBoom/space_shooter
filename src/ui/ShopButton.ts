@@ -76,6 +76,10 @@ export class ShopButton extends GameObjects.Container
     public preUpdate()
     {
         if(this.hover)
-            this.descriptionBox.setPosition(Phaser.Math.Clamp(this.scene.input.x, 0, this.scene.cameras.main.width - this.descriptionBox.displayWidth), this.scene.input.y);
+        {
+            this.descriptionBox.setPosition(Phaser.Math.Clamp(this.scene.input.x, 0, this.scene.cameras.main.width - this.descriptionBox.getWidth()), this.scene.input.y);
+
+            console.log(this.scene.cameras.main.width - this.descriptionBox.getWidth());
+        }
     }
 }
