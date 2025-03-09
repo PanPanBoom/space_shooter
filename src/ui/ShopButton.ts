@@ -2,6 +2,7 @@ import { GameObjects, Input, Math, Scene } from "phaser";
 import { Item } from "../items/Item";
 import { Potion } from "../items/Potion";
 import { NewShip } from "../items/NewShip";
+import { IncreaseFireRate } from "../items/IncreaseFireRate";
 // import { ItemDescriptionBox } from "./ItemDescriptionBox";
 
 export class ShopButton extends GameObjects.Container
@@ -54,7 +55,7 @@ export class ShopButton extends GameObjects.Container
 
     private selectRandomItem(x: number, y: number): Item
     {
-        const items = [new Potion(this.scene, x, y), new NewShip(this.scene, x, y, 2)];
+        const items = [new Potion(this.scene, x, y), new NewShip(this.scene, x, y, 2), new IncreaseFireRate(this.scene, x, y)];
 
         return items[Math.Between(0, items.length - 1)];
     }

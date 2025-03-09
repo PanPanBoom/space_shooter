@@ -281,6 +281,27 @@
 						"w": 54,
 						"h": 58
 					}
+				},
+				{
+					"filename": "bow.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"spriteSourceSize": {
+						"x": 7,
+						"y": 9,
+						"w": 48,
+						"h": 48
+					},
+					"frame": {
+						"x": 184,
+						"y": 156,
+						"w": 48,
+						"h": 48
+					}
 				}
 			]
 		}

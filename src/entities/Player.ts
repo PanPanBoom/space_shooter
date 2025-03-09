@@ -21,6 +21,9 @@ export class Player extends Entity
 
         const playerState = this.scene.registry.get(GameDataKeys.PLAYER_STATE);
 
+        playerState.getItems().forEach((item: Item) => item.apply(this));
+        playerState.clearItems();
+
         this.rateOfFire = 0.5;
         this.lastShotTime = 0;
 
@@ -34,7 +37,7 @@ export class Player extends Entity
         });
         GroupUtils.preallocateGroup(this.bullets, 5);
 
-        this.addComponent(new WeaponComponent(this.bullets, scene.sound.add("sfx_laser1"), 4, 12, 0xffe066, 1024));
+        this.addComponent(new WeaponComponent(this.bullets, scene.sound.add("sfx_laser1"), 4, 12, 0xffe066, playerState.getBulletSpeed()));
         this.addComponent(new MovementComponent());
         this.addComponent(playerState.getHealth());
 
@@ -43,8 +46,6 @@ export class Player extends Entity
         this.selectShip(defaultShip);
 
         this.setAngle(-90);
-
-        playerState.getItems().forEach((item: Item) => item.apply(this));
 
         if(this.scene.input.keyboard)
         {
@@ -55,8 +56,6 @@ export class Player extends Entity
         }
         else
             console.error("No keyboard input");
-
-        playerState.clearItems();
     }
 
     private initShipKeyBinds(shipId: number)
