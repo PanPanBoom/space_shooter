@@ -13,6 +13,8 @@ export class ShopScene extends Scene
 
     create()
     {
+        this.cameras.main.setBackgroundColor('rgba(0, 0, 0, 120)');
+
         const buttons = [];
         for(let i = 0; i < 3; i++)
         {
