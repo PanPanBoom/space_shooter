@@ -49,7 +49,6 @@ export class ShopButton extends GameObjects.Container
         this.bg.on('pointerout', () => this.hoverBehavior(false));
 
         this.bg.on('pointerdown', (pointer: Input.Pointer) => {
-            console.log(pointer.x, pointer.y);
             this.emit("click", this.item);
         })
     }
@@ -76,10 +75,6 @@ export class ShopButton extends GameObjects.Container
     public preUpdate()
     {
         if(this.hover)
-        {
             this.descriptionBox.setPosition(Phaser.Math.Clamp(this.scene.input.x, 0, this.scene.cameras.main.width - this.descriptionBox.getWidth()), this.scene.input.y);
-
-            console.log(this.scene.cameras.main.width - this.descriptionBox.getWidth());
-        }
     }
 }

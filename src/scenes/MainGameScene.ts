@@ -131,7 +131,7 @@ export class MainGameScene extends BaseScene
 
     private launchNextScreen()
     {
-        if(this.registry.get(GameDataKeys.ROUND_NUMBER) % 2 == 0 && !this.shopFinished)
+        if(this.registry.get(GameDataKeys.ROUND_NUMBER) % 4 == 0 && !this.shopFinished)
         {
             this.scene.launch(SceneNames.SHOP_SCENE);
             this.shopFinished = true;
