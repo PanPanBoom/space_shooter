@@ -3,7 +3,7 @@ import { Item } from "./Item";
 import { Player } from "../entities/Player";
 import { GameDataKeys } from "../GameDataKey";
 
-export class IncreaseFireRate extends Item
+export class IncreaseBulletSpeed extends Item
 {
     constructor(scene: Scene, x: number, y: number)
     {
@@ -16,6 +16,6 @@ export class IncreaseFireRate extends Item
     }
 
     public getDescription(): string {
-        return "Boost your fire rate !";
+        return "Increase your bullets' speed !";
     }
 }
